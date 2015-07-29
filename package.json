@@ -15,10 +15,14 @@
     "carousel",
     "responsive"
   ],
-  "author": "Pratinav Bagla <pratinavbagla@gmail.com>",
+  "dependencies": {
+    "jquery": ">=1.7"
+  },
+  "author": "Pratinav Bagla <pratinavbagla@gmail.com> (http://pratinav.tk)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Pratinav/jCider/issues"
+    "url": "https://github.com/Pratinav/jCider/issues",
+    "email": "pratinavbagla@gmail.com"
   },
   "homepage": "https://github.com/Pratinav/jCider#readme"
 }
