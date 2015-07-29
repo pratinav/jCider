@@ -1,6 +1,7 @@
 {
   "name": "jcider",
   "version": "1.0.0",
+  "title": "An extensive jQuery slider/carousel plugin",
   "description": "An extensive and responsive jQuery plugin for creating carousels or sliders.",
   "main": "jcider.min.js",
   "repository": {

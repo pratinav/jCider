@@ -1,5 +1,6 @@
 {
   "name": "jCider",
+  "version": "1.0.0",
   "title": "An extensive jQuery slider/carousel plugin",
   "description": "An extensive and responsive jQuery plugin for creating carousels or sliders.",
   "keywords": [
@@ -9,7 +10,6 @@
     "carousel",
     "responsive"
   ],
-  "version": "1.0.0",
   "author": {
     "name": "Pratinav Bagla",
     "email": "pratinavbagla@gmail.com",
