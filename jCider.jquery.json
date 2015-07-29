@@ -32,6 +32,6 @@
   "bugs": "https://github.com/Pratinav/jCider/issues",
   "download": "https://github.com/Pratinav/jCider/archive/master.zip",
   "dependencies": {
-    "jquery": ">=1.7"
+    "jquery": "*"
   }
 }

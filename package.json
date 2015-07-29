@@ -17,7 +17,7 @@
     "responsive"
   ],
   "dependencies": {
-    "jquery": ">=1.7"
+    "jquery": "*"
   },
   "author": "Pratinav Bagla <pratinavbagla@gmail.com> (http://pratinav.tk)",
   "license": "MIT",
