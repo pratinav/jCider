@@ -1,5 +1,5 @@
 /**    
- * jCider v0.1.0  (http://pratinav.tk/jCider)
+ * jCider 1.0.0  (http://pratinav.tk/jCider)
  * An extensive and responsive jQuery slider/carousel plugin
  * by PRATINAV BAGLA
  * 

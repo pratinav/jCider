@@ -3,24 +3,33 @@
   "title": "An extensive jQuery slider/carousel plugin",
   "description": "An extensive and responsive jQuery plugin for creating carousels or sliders.",
   "keywords": [
-    "jquery-plugins",
+    "jquery-plugin",
+    "jcider",
     "slider",
     "carousel",
     "responsive"
   ],
-  "version": "1.0",
+  "version": "1.0.0",
   "author": {
     "name": "Pratinav Bagla",
-    "url": "https://github.com/pratinav"
+    "email": "pratinavbagla@gmail.com",
+    "url": "https://github.com/Pratinav"
   },
+  "maintainers": [{
+        "name": "Pratinav Bagla",
+        "email": "pratinavbagla@gmail",
+        "url": "http://www.pratinav.tk"
+    }],
   "licenses": [
     {
       "type": "MIT",
-      "url": "http://www.opensource.org/licenses/mit-license.php"
+      "url": "https://github.com/Pratinav/jCider/blob/master/LICENSE.md"
     }
   ],
   "homepage": "http://pratinav.tk/jCider",
   "docs": "https://github.com/Pratinav/jCider#readme",
+  "demo": "http://pratinav.tk/jCider/",
+  "bugs": "https://github.com/Pratinav/jCider/issues",
   "download": "https://github.com/Pratinav/jCider/archive/master.zip",
   "dependencies": {
     "jquery": ">=1.7"
