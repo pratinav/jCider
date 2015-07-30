@@ -1,8 +1,5 @@
 //Icons for navigation-arrows
-@font-face {
-  font-family: 'untitled-font-1';
-  src:url('https://fontastic.s3.amazonaws.com/CoBsvmhLG8dQosPCdCFvBM/icons.css');
-}
+@import url(https://fontastic.s3.amazonaws.com/CoBsvmhLG8dQosPCdCFvBM/icons.css);
 // Positioning and styling for navigation controls.
 // Change at your will.
 
