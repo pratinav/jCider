@@ -84,7 +84,7 @@
 			resize();
 		});
 		if (config.controls)
-			wrapperName.prepend('<div class="slider-nav"><span class="nav-left"><</span><span class="nav-right">></span></div>');
+			wrapperName.prepend('<div class="slider-nav"><span class="nav-left icon-chevron-left"></span><span class="nav-right icon-chevron-right"></span></div>');
 		if (config.pagination) {
 			wrapperName.after('<div class="pagination"></div>');
 			$('.pagination').css({

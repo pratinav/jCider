@@ -1,3 +1,8 @@
+//Icons for navigation-arrows
+@font-face {
+  font-family: 'untitled-font-1';
+  src:url('https://fontastic.s3.amazonaws.com/CoBsvmhLG8dQosPCdCFvBM/icons.css');
+}
 // Positioning and styling for navigation controls.
 // Change at your will.
 
@@ -14,13 +19,13 @@ slider-nav {
 }
 // Both right and left nav arrows
 .slider-nav span {
-  height: 40px;
-  width: 40px;
   text-align: center;
   cursor: pointer;
   position: absolute;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 50%;
+  font-weight: 30px;
+}
+.slider-nav span:hover {
+  color: white;
 }
 // Left nav arrow
 .slider-nav .nav-left {
