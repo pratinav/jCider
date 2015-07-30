@@ -10,9 +10,6 @@ The [issues page](http://github.com/Pratinav/jCider/issues) is **ONLY** for bugs
 If you have a problem to operate the plugin or set it up, the issues page is not the place for it, mail me at [pratinavbagla@gmail.com](mailto:pratinavbagla@gmail.com). **I will try to get to you as fast as possible but may not be able to get to you always.**
 
 
-##Demo- [http://pratinav.tk/jCider](http://pratinav.tk/jCider)
-
-
 ##Installation   
 
 ####Download files   
