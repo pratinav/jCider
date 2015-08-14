@@ -12,6 +12,22 @@ If you have a problem to operate the plugin or set it up, the issues page is not
 
 ##Installation   
 
+####CDN
+- Link the ```jcider.css``` file in your ```head``` tag, like this: 
+```
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.jcider/1.1.2/jcider.css"/>
+```
+- Link ```jcider.min.js``` in your ```head``` tag or at the end of your ```body``` tag.
+ **Don't forget to link [jQuery](https://jquery.com) before the jCider file.**
+
+Like this:
+
+```
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/jquery.jcider/1.1.2/jcider.min.js"></script>
+```
+
+
 ####Download files   
 - Download the files.
 - Link the ```jcider.css``` file in your ```head``` tag, like this: 
