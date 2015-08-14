@@ -1,4 +1,4 @@
-# jCider
+# [jCider](http://pratinav.tk/jCider)
 An extensive and responsive jQuery slider/carousel plugin
 
 ##Contribution and Issues
