@@ -1,5 +1,5 @@
 # [jCider](http://pratinav.tk/jCider)
-An extensive and responsive jQuery slider/carousel plugin
+An extensive and responsive jQuery carousel plugin that will slide your world.
 
 ##Contribution and Issues
 This plugin is early in development and new features will be added soon. Feel free to contribute by sending in [pull requests](http://github.com/Pratinav/jCider/pulls) and help me improve the plugin by pointing out bugs in the [issues page](http://github.com/Pratinav/jCider/issues). 
