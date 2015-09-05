@@ -24,7 +24,7 @@ Like this:
 
 ```
 <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/jquery.jcider/1.2.0/jcider.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/jquery.jcider/3.0.0/jcider.min.js"></script>
 ```
 
 
@@ -183,7 +183,7 @@ $('.another-slider').jcider();
 ##License
 Copyright (c) 2015 Pratinav Bagla
 
-This content is released under [The MIT License](http://github.com/Pratinav/jCider/LICENSE.txt).
+This content is released under [The MIT License](http://github.com/Pratinav/jCider/blob/master/LICENSE.txt).
 
 
 
