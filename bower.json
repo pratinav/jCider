@@ -1,6 +1,6 @@
 {
   "name": "jCider",
-  "main": "jcider.min.js",
+  "main": ["jcider.min.js", "jcider.css"],
   "version": "1.1.2",
   "homepage": "https://github.com/Pratinav/jCider",
   "authors": [

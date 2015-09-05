@@ -1,22 +1,28 @@
-/**    
- * jCider 1.1.2  (http://pratinav.tk/jCider)
- * An extensive and responsive jQuery slider/carousel plugin
- * by PRATINAV BAGLA
- * 
+/*!
+ *         _ ______    __
+ *        (_) ___(_)__/ /__ ____
+ *       / / /__/ / _  / -_) __/
+ *    __/ /\___/_/\_,_/\__/_/
+ *   |___/
+ *
+ * jCider 2.0.0  (http://pratinav.tk/jCider)
+ * @author: Pratinav Bagla (http://pratinav.tk)
+ * @license: The MIT License (MIT)
+ **//*
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2015 Pratinav Bagla
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,188 +32,212 @@
  * SOFTWARE.
  **/
 
- (function($) {
+(function($){
+
 	$.fn.jcider = function (options) {
 
+		// Declare all options.
 		var config = $.extend({
-			fading: false,
-			easing: 'linear',
-			controls: true,
-			pagination: true,
-			transitionDuration: 400,
-			autoplay: false,
-			slideDuration: 3000
+			visibleSlides: 1, // Visible no. of slides
+			fading: false, // For fading/sliding effect
+			easing: 'ease-in-out', // For easing
+			controls: true, // For visibility of nav-arrows
+			pagination: true, // For visibility of pagination
+			transitionDuration: 400, // Duration of slide transition
+			autoplay: false, // Duh...
+			slideDuration: 3000 // Duration between each slide change in autoplay
 		}, options);
-		var wrapperI = this.index();
-		var wrapperName = $(this.parent().children().eq(wrapperI));
-		var sliderName = wrapperName.children();
-		var slideName = sliderName.children();
 
-		wrapperName.css({
-		  'position': 'relative',
-		  'overflow': 'hidden'
-		});
+		return this.each(function(){
 
-		if (config.fading) {
-			slideName.css({
-				'display': 'none',
-				'position': 'absolute',
-				'top': '0',
-				'left': '0'
+			var wrapper = $(this),
+				slider = wrapper.children(),
+				slide = slider.children(),
+				slideCount = slide.length,
+				slideWidth = wrapper.width()/config.visibleSlides,
+				slideHeight = wrapper.height(),
+				sliderWidth = slideWidth * slideCount;
+
+			wrapper.css({
+				'position': 'relative',
+				'overflow': 'hidden'
 			});
-			sliderName.css('position', 'relative');
-			slideName.first().addClass('visible');
-			slideName.first().fadeIn(config.transitionDuration);
-		} else {
-			slideName.css({
-			  'float': 'left',
-			  'position': 'relative'
-			});
-			sliderName.css({
-			  'left': '0px',
-			  'position': 'relative'
-			});
-	}
 
+			slider.css({
+				'position': 'relative',
+				'height': slideHeight+'px',
+				'left': '0px',
+				'transition': 'left '+config.transitionDuration+'ms '+config.easing
+			});
+			slider.addClass('jcider-slider');
 
-		var slideCount = slideName.length;
-		var slideWidth, sliderTotalWidth, slideHeight;
-		function resize() {
-			slideWidth = parseInt(wrapperName.css('width'));
-			slideHeight = parseInt(wrapperName.css('height'));
-			sliderTotalWidth = slideCount * slideWidth;
-			slideName.css({ 'width': slideWidth, 'height': slideHeight});
-			if (!config.fading) sliderName.css({ 'width': sliderTotalWidth});
-		}
-		resize();
-		$(window).resize(function() {
+			slider.css({
+				'width': slideWidth+'px',
+				'height': slideHeight+'px',
+			});
+
+			if (config.fading) {
+				slider.css({
+					'width': wrapper.width()+'px',
+				});
+
+				slide.css({
+					'display': 'none',
+					'position': 'absolute',
+					'top': '0',
+					'left': '0'
+				});
+
+				slide.first().fadeIn().addClass('active');
+			} else {
+				slider.css({
+					'width': sliderWidth+'px',
+				});
+
+				slide.css({
+					'float': 'left',
+				});
+
+				slide.first().addClass('active');
+
+			}
+			function resize() {
+				slideWidth = wrapper.width()/config.visibleSlides;
+				slideHeight = wrapper.height();
+				sliderWidth = slideWidth * slideCount;
+
+				slider.css('height', slideHeight+'px');
+				if (config.fading) $('slider').css('width', wrapper.width()+'px');
+				else $('slider').css('width', sliderWidth+'px');
+
+				slide.css({
+					'height': slideHeight+'px',
+					'width': slideWidth+'px',
+					'left': '0px'
+				});
+			}
 			resize();
-		});
-		if (config.controls)
-			wrapperName.prepend('<div class="slider-nav"><span class="nav-left icon-chevron-left"></span><span class="nav-right icon-chevron-right"></span></div>');
-		if (config.pagination) {
-			wrapperName.after('<div class="pagination"></div>');
-			$('.pagination').css({
-				'display': 'block',
-				'text-align': 'center',
+			$(window).resize(function() {
+				resize();
 			});
-		}
 
-		slideName.each(function() {
-			wrapperName.next('.pagination').append('<span class="point"></span>');
-		});
-		wrapperName.next('.pagination').find('.point').first().addClass('active');
+			if (config.controls)
+				wrapper.prepend('<div class="slider-nav"><span class="nav-left icon-chevron-left"></span><span class="nav-right icon-chevron-right"></span></div>');
 
-		if (config.autoplay) {
-			auto = setInterval(function() {
-				if (config.fading) {
-					var i = sliderName.find('.visible').index();
-					slideName.eq(i).removeClass('visible');
-					slideName.eq(i).fadeOut(config.transitionDuration);
-					if (i == slideName.length-1) i = -1;
-					var m = i+1;
-					slideName.eq(m).fadeIn(config.transitionDuration);
-					slideName.eq(m).addClass('visible');
-					updatePag(m);
-				} else {
-					if (parseInt(sliderName.css('left')) == (-sliderTotalWidth + slideWidth)) {
-						 sliderName.animate({
-					            left: '+='+(sliderTotalWidth - slideWidth)
-					        }, config.transitionDuration, config.easing);
-					} else {
-						 sliderName.animate({
-				            left: '-='+slideWidth
-				        }, config.transitionDuration, config.easing);
-					}
-					var l = parseInt(sliderName.css('left'))-slideWidth;
-					if (-l == sliderTotalWidth) l = 0;
-					updatePag(l);
+			if (config.pagination) {
+				wrapper.append('<div class="jcider-pagination"></div>');
+
+				for (x = 0; x < Math.ceil(slideCount/config.visibleSlides); x++) {
+					wrapper.find('.jcider-pagination').append('<span class="point"></span>');
 				}
-			},config.transitionDuration + config.slideDuration);
-		}
 
-		wrapperName.find('.slider-nav .nav-left').click(function() {
-				if (config.fading) {
-					var i = sliderName.find('.visible').index();
-					slideName.eq(i).removeClass('visible');
-					slideName.eq(i).fadeOut(config.transitionDuration);
-					if (i === 0) i = slideName.length;
-					slideName.eq(i-1).fadeIn(config.transitionDuration);
-					slideName.eq(i-1).addClass('visible');
+				wrapper.find('.jcider-pagination').find('.point').first().addClass('active');
+			}
+
+			function updatePagination() {
+				var slideIndex = slider.find('.active').index(),
+					activePag = wrapper.find('.jcider-pagination').find('.active');
+				activePag.removeClass('active');
+				var newIndex = Math.floor(slideIndex/config.visibleSlides);
+				if (slideCount%2!==0 && slideIndex === slideCount-config.visibleSlides)
+					newIndex = Math.ceil(slideIndex/config.visibleSlides);
+				wrapper.find('.jcider-pagination').children().eq(newIndex).addClass('active');
+			}
+
+			function slideNext() {
+				var index = slider.find('.active').index();
+
+				slide.eq(index).removeClass('active');
+				if (index!==slideCount-1 && -index*slideWidth > -(sliderWidth-config.visibleSlides*slideWidth)) {
+					slider.css('left', -(index+1)*slideWidth+'px');
+					slide.eq(index+1).addClass('active');
 				} else {
-					$('.slider-nav').css('pointer-events', 'none');
-					if (parseInt(sliderName.css('left'))>=0) {
-						sliderName.animate({
-						    left: '-='+(sliderTotalWidth - slideWidth)
-						}, config.transitionDuration, config.easing, function() {
-							$('.slider-nav').css('pointer-events', 'all');
-						});
-					} else {
-						sliderName.animate({
-						    left: '+='+slideWidth
-						}, config.transitionDuration, config.easing, function() {
-							$('.slider-nav').css('pointer-events', 'all');
-						});
+					slider.css('left', '0px');
+					slide.eq(0).addClass('active');
 				}
 			}
-			var l = parseInt(sliderName.css('left'))+slideWidth;
-			if (l > 0) l = -(sliderTotalWidth - slideWidth);
-			updatePag(l);
-		});
-		wrapperName.find('.slider-nav .nav-right').click(function() {
-			if (config.fading) {
-				var i = sliderName.find('.visible').index();
-				slideName.eq(i).removeClass('visible');
-				slideName.eq(i).fadeOut(config.transitionDuration);
-				if (i == slideName.length-1) i = -1;
-				slideName.eq(i+1).fadeIn(config.transitionDuration);
-				slideName.eq(i+1).addClass('visible');
-			} else {
-				$('.slider-nav').css('pointer-events', 'none');
-				if (parseInt(sliderName.css('left')) == (-sliderTotalWidth + slideWidth)) {
-					 sliderName.animate({
-				            left: '+='+(sliderTotalWidth - slideWidth)
-				        }, config.transitionDuration, config.easing, function() {
-				        	$('.slider-nav').css('pointer-events', 'all');
-				        });
+
+			function slidePrev() {
+				var index = slider.find('.active').index();
+
+				slide.eq(index).removeClass('active');
+				if (index!==0) {
+					slider.css('left', -(index-1)*slideWidth+'px');
+					slide.eq(index-1).addClass('active');
 				} else {
-					 sliderName.animate({
-			            left: '-='+slideWidth
-			        }, config.transitionDuration, config.easing, function() {
-				        	$('.slider-nav').css('pointer-events', 'all');
-				        });
+					slider.css('left', -(sliderWidth-config.visibleSlides*slideWidth)+'px');
+					slide.eq(slideCount-config.visibleSlides).addClass('active');
 				}
 			}
-			var l = parseInt(sliderName.css('left'))-slideWidth;
-			if (-l == sliderTotalWidth) l = 0;
-			updatePag(l);
+
+			function fadeNext() {
+				var index = slider.find('.active').index();
+				slide.eq(index).removeClass('active');
+				slide.eq(index).fadeOut(config.transitionDuration);
+				if (index === slideCount-1) index = -1;
+				slide.eq(index+1).fadeIn(config.transitionDuration);
+				slide.eq(index+1).addClass('active');
+			}
+
+			function fadePrev() {
+				var index = slider.find('.active').index();
+				slide.eq(index).removeClass('active');
+				slide.eq(index).fadeOut(config.transitionDuration);
+				if (index === 1) index = slideCount;
+				slide.eq(index-1).fadeIn(config.transitionDuration);
+				slide.eq(index-1).addClass('active');
+			}
+
+			function slidePagination(pag) {
+				var index = pag.index()*(config.visibleSlides),
+					current = slider.find('.active');
+
+				if (slideCount%2!==0 && pag.index() === Math.floor(slideCount/config.visibleSlides))
+					index = slideCount-config.visibleSlides;
+				current.removeClass('active');
+				slider.css('left', -(index)*slideWidth+'px');
+				slide.eq(index).addClass('active');
+			}
+
+			function fadePagination(pag) {
+				var index = pag.index()*(config.visibleSlides),
+					current = slider.find('.active');
+
+				current.removeClass('active');
+				current.fadeOut(config.transitionDuration);
+				slide.eq(index).fadeIn(config.transitionDuration);
+				slide.eq(index).addClass('active');
+			}
+
+			if (config.autoplay) {
+				setInterval(function() {
+					if (config.fading) fadeNext();
+					else slideNext();
+					updatePagination();
+				}, config.slideDuration);
+			}
+
+			wrapper.find('.nav-right').click(function() {
+				if (config.fading) fadeNext();
+				else slideNext();
+				updatePagination();
+			});
+
+			wrapper.find('.nav-left').click(function() {
+				if (config.fading) fadePrev();
+				else slidePrev();
+				updatePagination();
+			});
+
+			wrapper.find('.jcider-pagination').find('.point').click(function() {
+				$(this).siblings('.active').removeClass('active');
+				$(this).addClass('active');
+				if (config.fading) fadePagination($(this));
+				else slidePagination($(this));
+			});
+
 		});
 
-		wrapperName.next('.pagination').find('.point').click(function() {
-			var i = $(this).index();
-			if (config.fading) {
-				var x = sliderName.find('.visible').index();
-				slideName.eq(x).removeClass('visible');
-				slideName.eq(x).fadeOut(config.transitionDuration);
-				slideName.eq(i).fadeIn(config.transitionDuration);
-				slideName.eq(i).addClass('visible');
-			} else {
-				$('.slider-nav').css('pointer-events', 'none');
-				sliderName.animate({
-		            left: i*(-slideWidth)
-		        }, config.transitionDuration, function() {
-		        	$('.slider-nav').css('pointer-events', 'all');
-		        });
-			}
-	        updatePag(i*-slideWidth);
-		});
-		function updatePag(l) {
-			var i;
-			if (config.fading) {
-				i = sliderName.find('.visible').index();
-			} else i = l/-slideWidth;
-			wrapperName.next('.pagination').find('.point').removeClass('active');
-			wrapperName.next('.pagination').find('.point').eq(i).addClass('active');
-		}
 	};
+
 })(jQuery);

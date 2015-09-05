@@ -24,7 +24,7 @@ Like this:
 
 ```
 <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/jquery.jcider/1.1.2/jcider.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/jquery.jcider/1.2.0/jcider.min.js"></script>
 ```
 
 
@@ -109,6 +109,7 @@ $(document).ready(function(){
 You can pass in multiple options as arguments for the ```.jcider()``` function. They are- 
 ```
 $('yourWrapperElementHere').jcider({
+	visibleSlides: 1,
 	fading: false,
 	easing: 'linear',
 	controls: true,
@@ -120,6 +121,7 @@ $('yourWrapperElementHere').jcider({
 ```
 | Setting Name | Value | Description | Default |
 |--------------|-------|-------------|---------|
+| visibleSlides | integer | Selects the number of slides visble at a time. | 1 |
 | fading | boolean | Selects the type of transition. true is fading. ```false``` is sliding. | false |
 | easing | string | Selects the type of easing to be used for animations. Only 'linear' and 'swing' available by default, can be increased with the [jQuery easing plugin](http://gsgd.co.uk/sandbox/jquery/easing/). | 'linear' |
 | controls | boolean | Chooses whether the navigation controls are visible or not. ```true``` is visible. | true |
@@ -130,28 +132,35 @@ $('yourWrapperElementHere').jcider({
 
 
 ####Using Multiple carousels in one page
-You can use multiple carousels in one page but you need to call the ```.jcider()``` function on each of them with different specificity on each of them, i.e.-
-> All carousel wrapper elements **MUST** have different classes/identifiers for each of them.
+You can use multiple carousels in one page with ease. There may be two or more sliders with the same class.
 
 For example your **HTML** would be-
 ```
-<header>
-	<div class="slider">
-		<ul>
-			<li>First Slide.</li>
-			<li>Second Slide.</li>
-			<li>Third Slide.</li>
-		</ul>
-	</div>
-</header>
-<div class="slider-2">
+<div class="slider">
 	<ul>
 		<li>First Slide.</li>
 		<li>Second Slide.</li>
 		<li>Third Slide.</li>
 	</ul>
 </div>
-<div class="slider-3">
+
+<div class="slider">
+	<ul>
+		<li>First slide.</li>
+		<li>Second slide.</li>
+		<li>Third slide.</li>
+	</ul>
+</div>
+
+<div class="another-slider">
+	<ul>
+		<li>First Slide.</li>
+		<li>Second Slide.</li>
+		<li>Third Slide.</li>
+	</ul>
+</div>
+
+<div class="another-slider">
 	<ul>
 		<li>First Slide.</li>
 		<li>Second Slide.</li>
@@ -163,8 +172,7 @@ For example your **HTML** would be-
 Your **JavaScript** would be-
 ```
 $('.slider').jcider();
-$('.slider-2').jcider();
-$('.slider-3').jcider();
+$('.another-slider').jcider();
 ```
 
 ##Dependencies
