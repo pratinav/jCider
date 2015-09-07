@@ -5,7 +5,7 @@
  *    __/ /\___/_/\_,_/\__/_/
  *   |___/
  *
- * jCider 3.0.0  (http://pratinav.tk/jCider)
+ * jCider 3.0.1  (http://pratinav.tk/jCider)
  * @author: Pratinav Bagla (http://pratinav.tk)
  * @license: The MIT License (MIT)
  **//*
@@ -71,11 +71,6 @@
 			});
 			slider.addClass('jcider-slider');
 
-			slider.css({
-				'width': slideWidth+'px',
-				'height': slideHeight+'px',
-			});
-
 			if (config.fading) {
 				slider.css({
 					'width': wrapper.width()+'px',
@@ -106,14 +101,13 @@
 				slideHeight = wrapper.height();
 				sliderWidth = slideWidth * slideCount;
 
-				slider.css('height', slideHeight+'px');
-				if (config.fading) $('slider').css('width', wrapper.width()+'px');
-				else $('slider').css('width', sliderWidth+'px');
+				slider.css({'height': slideHeight+'px', 'left': '0px'});
+				if (config.fading) slider.css('width', wrapper.width()+'px');
+				else slider.css('width', sliderWidth+'px');
 
 				slide.css({
 					'height': slideHeight+'px',
-					'width': slideWidth+'px',
-					'left': '0px'
+					'width': slideWidth+'px'
 				});
 			}
 			resize();
@@ -224,6 +218,18 @@
 			});
 
 			wrapper.find('.nav-left').click(function() {
+				if (config.fading) fadePrev();
+				else slidePrev();
+				updatePagination();
+			});
+
+			slide.on('swipeleft', function() {
+				if (config.fading) fadeNext();
+				else slideNext();
+				updatePagination();
+			});
+
+			slide.on('swiperight', function() {
 				if (config.fading) fadePrev();
 				else slidePrev();
 				updatePagination();
