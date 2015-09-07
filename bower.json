@@ -1,7 +1,7 @@
 {
   "name": "jCider",
   "main": ["jcider.min.js", "jcider.css"],
-  "version": "3.0.0",
+  "version": "3.0.1",
   "homepage": "https://github.com/Pratinav/jCider",
   "authors": [
     "Pratinav Bagla <pratinavbagla@gmail.com> (http://pratinav.tk)"
