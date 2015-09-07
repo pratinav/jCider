@@ -111,7 +111,7 @@ You can pass in multiple options as arguments for the ```.jcider()``` function. 
 $('yourWrapperElementHere').jcider({
 	visibleSlides: 1,
 	fading: false,
-	easing: 'linear',
+	easing: 'ease-in-out',
 	controls: true,
 	pagination: true,
 	transitionDuration: 400,
@@ -123,7 +123,7 @@ $('yourWrapperElementHere').jcider({
 |--------------|-------|-------------|---------|
 | visibleSlides | integer | Selects the number of slides visble at a time. | 1 |
 | fading | boolean | Selects the type of transition. true is fading. ```false``` is sliding. | false |
-| easing | string | Selects the type of easing to be used for animations. Only 'linear' and 'swing' available by default, can be increased with the [jQuery easing plugin](http://gsgd.co.uk/sandbox/jquery/easing/). | 'linear' |
+| easing | string | Selects the type of easing to be used for animations. Only 'linear' and 'swing' available by default, can be increased with the [jQuery easing plugin](http://gsgd.co.uk/sandbox/jquery/easing/). | 'ease-in-out' |
 | controls | boolean | Chooses whether the navigation controls are visible or not. ```true``` is visible. | true |
 | pagination | boolean | Chooses whether the pagination is visible or not. ```true``` is visible. | true |
 | transitionDuration | integer | The duration taken to transition from one slide to another, in milliseconds. | 400 |
