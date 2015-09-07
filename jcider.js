@@ -102,8 +102,11 @@
 				sliderWidth = slideWidth * slideCount;
 
 				slider.css({'height': slideHeight+'px', 'left': '0px'});
-				if (config.fading) slider.css('width', wrapper.width()+'px');
-				else slider.css('width', sliderWidth+'px');
+				if (config.fading) {
+					slider.css('width', wrapper.width()+'px');
+				} else {
+					slider.css('width', sliderWidth+'px');
+				}
 
 				slide.css({
 					'height': slideHeight+'px',
