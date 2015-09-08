@@ -96,8 +96,6 @@ Do not give the **'slides' (innermost elements)** any width or height. The width
 
 You can style each slide through the selector for the **slide elements**.
 
-**The current build of the plugin only supports one 'slide element' to be visible at a time and each slide to be of the same width. Support for multiple slides being visible at once and variable slide width will be added soon.**
-
 
 ####Basic Usage
 Put the following code in ```script``` tags in the ```head``` tag of your HTML document.
@@ -191,7 +189,6 @@ $('.another-slider').jcider();
 Copyright (c) 2015 Pratinav Bagla
 
 This content is released under [The MIT License](http://github.com/Pratinav/jCider/blob/master/LICENSE.txt).
-
 
 
 _See a typo? Think docs can be improved? Send in a [pull request](http://github.com/Pratinav/jCider/pulls) or tell me in the [issues page](http://github.com/Pratinav/jCider/issues)._
