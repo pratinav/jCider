@@ -15,7 +15,7 @@ If you have a problem to operate the plugin or set it up, the issues page is not
 ####CDN
 - Link the ```jcider.css``` file in your ```head``` tag, like this: 
 ```
-<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.jcider/1.1.2/jcider.css"/>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.jcider/3.0.1/jcider.css"/>
 ```
 - Link ```jcider.min.js``` in your ```head``` tag or at the end of your ```body``` tag.
  **Don't forget to link [jQuery](https://jquery.com) before the jCider file.**   
@@ -25,8 +25,9 @@ Like this:
 
 ```
 <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+// Only if you want swipe support
 <script type="text/javascript" src="PATH_TO_FILE/jquery.mobile.custom.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/jquery.jcider/3.0.0/jcider.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/jquery.jcider/3.0.1/jcider.min.js"></script>
 ```
 
 
