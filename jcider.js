@@ -7,7 +7,7 @@
  *
  * jCider 3.0.1  (http://pratinav.tk/jCider)
  * @author: Pratinav Bagla (http://pratinav.tk)
- * @license: The MIT License (MIT)
+ * @license: The MIT License (https://github.com/Pratinav/jCider/blob/master/LICENSE.txt)
  **//*
  * The MIT License (MIT)
  *
