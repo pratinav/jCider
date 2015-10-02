@@ -1,14 +1,10 @@
-/*!
- *         _ ______    __
- *        (_) ___(_)__/ /__ ____
- *       / / /__/ / _  / -_) __/
- *    __/ /\___/_/\_,_/\__/_/
- *   |___/
- *
+/*!====================================================
  * jCider 3.0.1  (http://pratinav.tk/jCider)
+ *=====================================================
  * @author: Pratinav Bagla (http://pratinav.tk)
  * @license: The MIT License (https://github.com/Pratinav/jCider/blob/master/LICENSE.txt)
- **//*
+ *=====================================================*/
+/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2015 Pratinav Bagla
