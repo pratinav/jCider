@@ -1,35 +1,43 @@
-/*Icons for navigation-arrows*/
 @import url(https://fontastic.s3.amazonaws.com/CoBsvmhLG8dQosPCdCFvBM/icons.css);
 
 /*Positioning and styling for navigation controls.*/
 /*Change at your will.*/
 
 /*Parent container for navigation arrows*/
-.slider-nav {
+.jcider-nav {
   position: absolute;
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   z-index: 4;
   width: 100%;
   color: white;
   font-size: 30px;
 }
 /*Both right and left nav arrows*/
-.slider-nav span {
+.jcider-nav span {
   text-align: center;
   cursor: pointer;
   position: absolute;
-  font-size: 20px;
+  font-size: 40px;
+  color: white;
+  transition: all 300ms;
+}
+
+.jcider-nav span.disabled {
+  pointer-events: none;
+  color: rgba(255,255,255,0.2);
 }
 
  /*Left nav arrow*/
-.slider-nav .nav-left {
+.jcider-nav .jcider-nav-left {
   left: 5px;
 }
 /*Right nav arrow*/
-.slider-nav .nav-right {
+.jcider-nav .jcider-nav-right {
   right: 5px;
 }
 
@@ -43,17 +51,24 @@
 }
 
 /*Styling for pagination points*/
-.jcider-pagination .point {
+.jcider-pagination-point {
+  position: relative;
   background: none;
   border-radius: 50%;
-  margin: 0 5px;
+  margin: 8px;
   display: inline-block;
-  width: 10px;
-  height: 10px;
-  border: 1.5px solid black;
+  width: 8px;
+  height: 8px;
   cursor: pointer;
+  background: rgba(255,255,255,0.5);
+  transition: all 300ms;
 }
  /*Styling for active pagination point*/
-.jcider-pagination .point.active {
-  background: black;
+.jcider-pagination-point.active {
+  background: white;
+  -webkit-transform: scale(1.5);
+  -moz-transform: scale(1.5);
+  -ms-transform: scale(1.5);
+  -o-transform: scale(1.5);
+  transform: scale(1.5);
 }

@@ -1,5 +1,5 @@
 /*!====================================================
- * jCider 3.0.1  (http://pratinav.tk/jCider)
+ * jCider 3.0.2  (http://pratinav.tk/jCider)
  *=====================================================
  * @author: Pratinav Bagla (http://pratinav.tk)
  * @license: The MIT License (https://github.com/Pratinav/jCider/blob/master/LICENSE.txt)
@@ -34,212 +34,512 @@
 
 		// Declare all options.
 		var config = $.extend({
+			looping: true, // For looping
 			visibleSlides: 1, // Visible no. of slides
+			variableWidth: false, // For variable width
+			variableHeight: true, // For variable height
 			fading: false, // For fading/sliding effect
 			easing: 'ease-in-out', // For easing
-			controls: true, // For visibility of nav-arrows
-			pagination: true, // For visibility of pagination
 			transitionDuration: 400, // Duration of slide transition
 			autoplay: false, // Duh...
-			slideDuration: 3000 // Duration between each slide change in autoplay
+			slideDuration: 3000, // Duration between each slide change in autoplay
+			controls: true, // For visibility of nav-arrows
+			controlsWrapper: 'div.jcider-nav', // Element for nav wrapper
+			controlsLeft: ['span.jcider-nav-left', ''], // Element for nav-left 
+			controlsRight: ['span.jcider-nav-right', ''], // Element for nav-right
+			pagination: true, // For visibility of pagination
+			paginationWrapper: 'div.jcider-pagination', // Element for pagination wrapper
+			paginationPoint: 'div.jcider-pagination-point' // Element for pagination points
 		}, options);
 
 		return this.each(function(){
 
-			var wrapper = $(this),
-				slider = wrapper.children(),
-				slide = slider.children(),
-				slideCount = slide.length,
-				slideWidth = wrapper.width()/config.visibleSlides,
-				slideHeight = wrapper.height(),
-				sliderWidth = slideWidth * slideCount;
+			// Detect browser
+			if(!$.browser){
 
-			wrapper.css({
+				$.browser = {};
+				$.browser.mozilla = false;
+				$.browser.webkit = false;
+				$.browser.opera = false;
+				$.browser.safari = false;
+				$.browser.chrome = false;
+				$.browser.msie = false;
+				$.browser.android = false;
+				$.browser.blackberry = false;
+				$.browser.ios = false;
+				$.browser.operaMobile = false;
+				$.browser.windowsMobile = false;
+				$.browser.mobile = false;
+
+				var nAgt = navigator.userAgent;
+				$.browser.ua = nAgt;
+
+				$.browser.name  = navigator.appName;
+				$.browser.fullVersion  = ''+parseFloat(navigator.appVersion);
+				$.browser.majorVersion = parseInt(navigator.appVersion,10);
+				var nameOffset,verOffset,ix;
+
+			// In Opera, the true version is after "Opera" or after "Version"
+				if ((verOffset=nAgt.indexOf("Opera"))!=-1) {
+					$.browser.opera = true;
+					$.browser.name = "Opera";
+					$.browser.fullVersion = nAgt.substring(verOffset+6);
+					if ((verOffset=nAgt.indexOf("Version"))!=-1)
+						$.browser.fullVersion = nAgt.substring(verOffset+8);
+				}
+
+			// In MSIE < 11, the true version is after "MSIE" in userAgent
+				else if ( (verOffset=nAgt.indexOf("MSIE"))!=-1) {
+					$.browser.msie = true;
+					$.browser.name = "Microsoft Internet Explorer";
+					$.browser.fullVersion = nAgt.substring(verOffset+5);
+				}
+
+			// In TRIDENT (IE11) => 11, the true version is after "rv:" in userAgent
+				else if (nAgt.indexOf("Trident")!=-1 ) {
+					$.browser.msie = true;
+					$.browser.name = "Microsoft Internet Explorer";
+					var start = nAgt.indexOf("rv:")+3;
+					var end = start+4;
+					$.browser.fullVersion = nAgt.substring(start,end);
+				}
+
+			// In Chrome, the true version is after "Chrome"
+				else if ((verOffset=nAgt.indexOf("Chrome"))!=-1) {
+					$.browser.webkit = true;
+					$.browser.chrome = true;
+					$.browser.name = "Chrome";
+					$.browser.fullVersion = nAgt.substring(verOffset+7);
+				}
+			// In Safari, the true version is after "Safari" or after "Version"
+				else if ((verOffset=nAgt.indexOf("Safari"))!=-1) {
+					$.browser.webkit = true;
+					$.browser.safari = true;
+					$.browser.name = "Safari";
+					$.browser.fullVersion = nAgt.substring(verOffset+7);
+					if ((verOffset=nAgt.indexOf("Version"))!=-1)
+						$.browser.fullVersion = nAgt.substring(verOffset+8);
+				}
+			// In Safari, the true version is after "Safari" or after "Version"
+				else if ((verOffset=nAgt.indexOf("AppleWebkit"))!=-1) {
+					$.browser.webkit = true;
+					$.browser.name = "Safari";
+					$.browser.fullVersion = nAgt.substring(verOffset+7);
+					if ((verOffset=nAgt.indexOf("Version"))!=-1)
+						$.browser.fullVersion = nAgt.substring(verOffset+8);
+				}
+			// In Firefox, the true version is after "Firefox"
+				else if ((verOffset=nAgt.indexOf("Firefox"))!=-1) {
+					$.browser.mozilla = true;
+					$.browser.name = "Firefox";
+					$.browser.fullVersion = nAgt.substring(verOffset+8);
+				}
+			// In most other browsers, "name/version" is at the end of userAgent
+				else if ( (nameOffset=nAgt.lastIndexOf(' ')+1) < (verOffset=nAgt.lastIndexOf('/')) ){
+					$.browser.name = nAgt.substring(nameOffset,verOffset);
+					$.browser.fullVersion = nAgt.substring(verOffset+1);
+					if ($.browser.name.toLowerCase()==$.browser.name.toUpperCase()) {
+						$.browser.name = navigator.appName;
+					}
+				}
+
+				/*Check all mobile environments*/
+				$.browser.android = (/Android/i).test(nAgt);
+				$.browser.blackberry = (/BlackBerry/i).test(nAgt);
+				$.browser.ios = (/iPhone|iPad|iPod/i).test(nAgt);
+				$.browser.operaMobile = (/Opera Mini/i).test(nAgt);
+				$.browser.windowsMobile = (/IEMobile/i).test(nAgt);
+				$.browser.mobile = $.browser.android || $.browser.blackberry || $.browser.ios || $.browser.windowsMobile || $.browser.operaMobile;
+
+
+			// trim the fullVersion string at semicolon/space if present
+				if ((ix=$.browser.fullVersion.indexOf(";"))!=-1)
+					$.browser.fullVersion=$.browser.fullVersion.substring(0,ix);
+				if ((ix=$.browser.fullVersion.indexOf(" "))!=-1)
+					$.browser.fullVersion=$.browser.fullVersion.substring(0,ix);
+
+				$.browser.majorVersion = parseInt(''+$.browser.fullVersion,10);
+				if (isNaN($.browser.majorVersion)) {
+					$.browser.fullVersion  = ''+parseFloat(navigator.appVersion);
+					$.browser.majorVersion = parseInt(navigator.appVersion,10);
+				}
+				$.browser.version = $.browser.majorVersion;
+			}
+
+			function getElementString(arr, content) {
+				if (content===undefined) {
+					content = '';
+				}
+				var el = '<'+arr[0]+' class=\"';
+				for (var x = 1; x < arr.length; x++) {
+					el += arr[x];
+					if (x!==arr.length-1) el += ' ';
+				}
+				el+='\">'+content+'</'+arr[0]+'>';
+				return el;
+			}
+
+			var $wrapper = $(this),
+				$slideWrap = $wrapper.children(),
+				$slides = $slideWrap.children(),
+				slideCount = $slides.length,
+				$controls,
+				$controlsLeft,
+				$controlsRight,
+				$pagination,
+				$paginationPoints,
+				$current,
+				currentWidth,
+				currentHeight,
+				initPos = false,
+				fallback = false,
+				pause = false,
+				offset = 0;
+
+			if ((($.browser.msie || $.browser.mozilla) && $.browser.version < 10) || ($.browser.chrome && $.browser.version < 12) || ($.browser.safari && $.browser.version < 3.2) || ($.browser.opera && $.browser.version < 15) || ($.browser.operaMobile && $.browser.version < 30) || ($.browser.android && $.browser.version < 3)) {
+				fallback = true;
+			}
+
+			$wrapper.css({
 				'position': 'relative',
-				'overflow': 'hidden'
+				'overflow': 'hidden',
+				'transition': 'all '+config.transitionDuration+'ms',
 			});
 
-			slider.css({
+			$slideWrap.css({
 				'position': 'relative',
-				'height': slideHeight+'px',
-				'left': '0px',
-				'transition': 'left '+config.transitionDuration+'ms '+config.easing
+				'height': '100%'
 			});
-			slider.addClass('jcider-slider');
 
 			if (config.fading) {
-				slider.css({
-					'width': wrapper.width()+'px',
+				$slideWrap.css({
+					'width': '100%'
 				});
-
-				slide.css({
-					'display': 'none',
-					'position': 'absolute',
-					'top': '0',
-					'left': '0'
-				});
-
-				slide.first().fadeIn().addClass('active');
+				$slides.css({
+					'position': 'absolute'
+				}).not(0).fadeOut();
 			} else {
-				slider.css({
-					'width': sliderWidth+'px',
+				$slideWrap.css({
+					'width': calcWidth()+'px',
+					'transition': 'all '+config.transitionDuration+'ms '+config.easing,
+					'left': '0',
+					'transform': 'translate3d(0,0,0)',
+					'cursor': 'move'
 				});
 
-				slide.css({
-					'float': 'left',
+				$slides.css({
+					'display': 'inline-block',
+					'float': 'left'
 				});
-
-				slide.first().addClass('active');
-
 			}
-			function resize() {
-				slideWidth = wrapper.width()/config.visibleSlides;
-				slideHeight = wrapper.height();
-				sliderWidth = slideWidth * slideCount;
 
-				slider.css({'height': slideHeight+'px', 'left': '0px'});
+			function calcWidth() {
+				var width = 0;
+				for (var x = 0; x < slideCount; x++) {
+					width+= $slides.eq(x).outerWidth(true);
+				}
+				return width;
+			}
+
+			function calcOff(index) {
+				var $el = $slides.eq(index),
+					offset = $el.offset().left,
+					wrapperOffset = $slideWrap.offset().left;
+				return wrapperOffset-offset;
+			}
+
+
+			function initControls() {
+				if (config.controls !== true) return;
+				var element = config.controlsWrapper.split('.');
+				$wrapper.append(getElementString(element));
+				$controlsWrapper = $wrapper.find(config.controlsWrapper);
+				$controlsWrapper.append(getElementString(config.controlsLeft[0].split('.'), config.controlsLeft[1]));
+				$controlsWrapper.append(getElementString(config.controlsRight[0].split('.'), config.controlsRight[1]));
+				$controlsLeft = $controlsWrapper.find(config.controlsLeft[0]);
+				$controlsRight = $controlsWrapper.find(config.controlsRight[0]);
+			}
+
+
+			function initPagination() {
+				if (config.pagination !== true) return;
+				var pagWrap = getElementString(config.paginationWrapper.split('.'));
+				$wrapper.append(pagWrap);
+				$pagination = $wrapper.find(config.paginationWrapper);
+				var pagPoint = getElementString(config.paginationPoint.split('.'));
+				for (var x = 0; x < Math.ceil(slideCount/config.visibleSlides); x++) {
+					$pagination.append(pagPoint);
+				}
+				$paginationPoints = $pagination.children(config.paginationPoint);
+			}
+
+
+			function moveTo(index) {
+				if (!config.looping) {
+					if (index > slideCount-1 || index < 0) {
+						return;
+					}
+
+					if ($controlsLeft.hasClass('disabled')) {
+						$controlsLeft.removeClass('disabled');
+					}
+					if ($controlsRight.hasClass('disabled')) {
+						$controlsRight.removeClass('disabled');
+					}
+
+					if (index === 0) {
+						$controlsLeft.addClass('disabled');
+					} else if(index===slideCount-1) {
+						$controlsRight.addClass('disabled');
+					}
+				}
+
+
+				var $prev;
+				if (initPos) {
+					$prev = $slides.filter('.active');
+					if ($prev.index()===index) return;
+					$prev.removeClass('active');
+					if (config.pagination) {
+						$paginationPoints.filter('.active').removeClass('active');
+					}
+				}
+				if (index < 0) {
+					index = slideCount-1;
+				} else if (index > slideCount-1) {
+					index = 0;
+				}
+				$current = $slides.eq(index);
+				if (config.visibleSlides===1) {
+					if (config.variableHeight) {
+						currentHeight = $current.height();
+						$wrapper.css({
+							'height': currentHeight+'px'
+						});
+					}
+					if (config.variableWidth) {
+						currentWidth = $current.width();
+						$wrapper.css({
+							'width': currentWidth+'px'
+						});
+					}
+				}
+				if (config.pagination) {
+					$paginationPoints.eq(index).addClass('active');
+				}
+				$current.addClass('active');
 				if (config.fading) {
-					slider.css('width', wrapper.width()+'px');
+					if (initPos) {
+						$prev.fadeOut(config.transitionDuration);
+					}
+					$current.fadeIn(config.transitionDuration);
 				} else {
-					slider.css('width', sliderWidth+'px');
+					offset = calcOff(index);
+					if (fallback) {
+						$slideWrap.css({
+							'left': '-'+offset()+'px'
+						});
+					} else {
+						$slideWrap.css({
+							'-webkit-transform': 'translate3d('+offset +'px,0, 0)',
+							'-moz-transform': 'translate3d('+offset +'px,0, 0)',
+							'transform': 'translate3d('+offset +'px,0, 0)'
+						});
+					}
 				}
-
-				slide.css({
-					'height': slideHeight+'px',
-					'width': slideWidth+'px'
-				});
-			}
-			resize();
-			$(window).resize(function() {
-				resize();
-			});
-
-			if (config.controls)
-				wrapper.prepend('<div class="slider-nav"><span class="nav-left icon-chevron-left"></span><span class="nav-right icon-chevron-right"></span></div>');
-
-			if (config.pagination) {
-				wrapper.append('<div class="jcider-pagination"></div>');
-
-				for (x = 0; x < Math.ceil(slideCount/config.visibleSlides); x++) {
-					wrapper.find('.jcider-pagination').append('<span class="point"></span>');
+				if (!initPos) {
+					initPos = true;
 				}
-
-				wrapper.find('.jcider-pagination').find('.point').first().addClass('active');
 			}
 
-			function updatePagination() {
-				var slideIndex = slider.find('.active').index(),
-					activePag = wrapper.find('.jcider-pagination').find('.active');
-				activePag.removeClass('active');
-				var newIndex = Math.floor(slideIndex/config.visibleSlides);
-				if (slideCount%2!==0 && slideIndex === slideCount-config.visibleSlides)
-					newIndex = Math.ceil(slideIndex/config.visibleSlides);
-				wrapper.find('.jcider-pagination').children().eq(newIndex).addClass('active');
+			function next() {
+				moveTo($current.index()+1);
 			}
 
-			function slideNext() {
-				var index = slider.find('.active').index();
+			function prev() {
+				moveTo($current.index()-1);
+			}
 
-				slide.eq(index).removeClass('active');
-				if (index!==slideCount-1 && -index*slideWidth > -(sliderWidth-config.visibleSlides*slideWidth)) {
-					slider.css('left', -(index+1)*slideWidth+'px');
-					slide.eq(index+1).addClass('active');
+			function play() {
+				next();
+				if (pause) {
+					pause = false;
+					return;
+				}
+				setTimeout(function() {
+					play();
+				},config.slideDuration);
+			}
+
+			function stopPlay() {
+				if (!pause) {
+					pause = true;
+				}
+			}
+
+			function togglePlay(){
+				if (!pause) {
+					pause = true;
 				} else {
-					slider.css('left', '0px');
-					slide.eq(0).addClass('active');
+					pause = false;
+					play();
 				}
 			}
 
-			function slidePrev() {
-				var index = slider.find('.active').index();
+			function init() {
+				if (config.controls) {
+					initControls();
+				}
 
-				slide.eq(index).removeClass('active');
-				if (index!==0) {
-					slider.css('left', -(index-1)*slideWidth+'px');
-					slide.eq(index-1).addClass('active');
+				if (config.pagination) {
+					initPagination();
+				}
+
+				moveTo(0);
+
+				if (config.autoplay) {
+					play();
+				}
+			}
+			init();
+
+			function hideControls() {
+				if (!config.controls) {
+					return;
+				}
+				if ($controlsWrapper.css('display') !== 'none') {
+					$controlsWrapper.hide();
+				}
+			}
+
+			function showControls() {
+				if (!config.controls) {
+					return;
+				}
+				if ($controlsWrapper.css('display') === 'none') {
+					$controlsWrapper.show();
+				}
+			}
+
+			function toggleControls() {
+				if (!config.controls) {
+					return;
+				}
+				if ($controlsWrapper.css('display') !== 'none') {
+					$controlsWrapper.hide();
 				} else {
-					slider.css('left', -(sliderWidth-config.visibleSlides*slideWidth)+'px');
-					slide.eq(slideCount-config.visibleSlides).addClass('active');
+					$controlsWrapper.show();
 				}
 			}
 
-			function fadeNext() {
-				var index = slider.find('.active').index();
-				slide.eq(index).removeClass('active');
-				slide.eq(index).fadeOut(config.transitionDuration);
-				if (index === slideCount-1) index = -1;
-				slide.eq(index+1).fadeIn(config.transitionDuration);
-				slide.eq(index+1).addClass('active');
+			function hidePagination() {
+				if (!config.pagination) {
+					return;
+				}
+				if ($pagination.css('display') !== 'none') {
+					$pagination.hide();
+				}
 			}
 
-			function fadePrev() {
-				var index = slider.find('.active').index();
-				slide.eq(index).removeClass('active');
-				slide.eq(index).fadeOut(config.transitionDuration);
-				if (index === 1) index = slideCount;
-				slide.eq(index-1).fadeIn(config.transitionDuration);
-				slide.eq(index-1).addClass('active');
+			function showPagination() {
+				if (!config.pagination) {
+					return;
+				}
+				if ($pagination.css('display') === 'none') {
+					$pagination.show();
+				}
 			}
 
-			function slidePagination(pag) {
-				var index = pag.index()*(config.visibleSlides),
-					current = slider.find('.active');
-
-				if (slideCount%2!==0 && pag.index() === Math.floor(slideCount/config.visibleSlides))
-					index = slideCount-config.visibleSlides;
-				current.removeClass('active');
-				slider.css('left', -(index)*slideWidth+'px');
-				slide.eq(index).addClass('active');
+			function togglePagination() {
+				if (!config.pagination) {
+					return;
+				}
+				if ($pagination.css('display') !== 'none') {
+					$pagination.hide();
+				} else {
+					$pagination.show();
+				}
 			}
 
-			function fadePagination(pag) {
-				var index = pag.index()*(config.visibleSlides),
-					current = slider.find('.active');
-
-				current.removeClass('active');
-				current.fadeOut(config.transitionDuration);
-				slide.eq(index).fadeIn(config.transitionDuration);
-				slide.eq(index).addClass('active');
-			}
-
-			if (config.autoplay) {
-				setInterval(function() {
-					if (config.fading) fadeNext();
-					else slideNext();
-					updatePagination();
-				}, config.slideDuration);
-			}
-
-			wrapper.find('.nav-right').click(function() {
-				if (config.fading) fadeNext();
-				else slideNext();
-				updatePagination();
+			$paginationPoints.on('click', function(e) {
+				e.stopPropagation();
+				var index = $(this).index();
+				moveTo(index);
+				return false;
 			});
 
-			wrapper.find('.nav-left').click(function() {
-				if (config.fading) fadePrev();
-				else slidePrev();
-				updatePagination();
+			$controlsLeft.on('click', function(e) {
+				e.stopPropagation();
+				prev();
+				return false;
 			});
 
-			slide.on('swipeleft', function() {
-				if (config.fading) fadeNext();
-				else slideNext();
-				updatePagination();
+			$controlsRight.on('click', function(e) {
+				e.stopPropagation();
+				next();
+				return false;
 			});
 
-			slide.on('swiperight', function() {
-				if (config.fading) fadePrev();
-				else slidePrev();
-				updatePagination();
+			var mouseDown = false,
+				mouseMove = false,
+				mouseStart = 0,
+				touchStartY = 0,
+				mouseX = 0;
+			$wrapper.on({
+				'mousedown': function(e) {
+					mouseDown = true;
+					if ($.browser.msie) {
+						mouseStart = event.clientX + document.body.scrollLeft;
+					} else {
+						mouseStart = e.pageX;
+					}
+				},
+				'mouseup': function(e) {
+					if (!mouseMove) {
+						return;
+					}
+					mouseDown = false;
+					mouseMove = false;
+					if (mouseStart > mouseX+20) {
+						next();
+					} else if (mouseStart < mouseX-20) {
+						prev();
+					}
+				},
+				'mousemove': function(e) {
+					if (!mouseDown) return;
+					mouseMove = true;
+					if ($.browser.msie) {
+						mouseX = event.clientX + document.body.scrollLeft;
+					} else {
+						mouseX = e.pageX;
+					}
+				},
+				'touchstart': function(e) {
+					touchStartY = e.originalEvent.touches[0].clientY;
+				},
+				'touchend': function(e) {
+					var touchEndY = e.originalEvent.changedTouches[0].clientY;
+					if(touchStartY > touchEndY+10) next();
+					else if(touchStartY < touchEndY-10) prev();
+				},
+				'touchmove': function(e) {
+					if(e.preventDefault) { e.preventDefault(); }
+				}
 			});
 
-			wrapper.find('.jcider-pagination').find('.point').click(function() {
-				$(this).siblings('.active').removeClass('active');
-				$(this).addClass('active');
-				if (config.fading) fadePagination($(this));
-				else slidePagination($(this));
-			});
+			$.fn.jcider.moveTo = moveTo;
+			$.fn.jcider.moveRight = next;
+			$.fn.jcider.moveLeft = prev;
+			$.fn.jcider.play = play;
+			$.fn.jcider.pause = stopPlay;
+			$.fn.jcider.togglePlay = togglePlay;
+			$.fn.jcider.hidePagination = hidePagination;
+			$.fn.jcider.showPagination = showPagination;
+			$.fn.jcider.togglePagination = togglePagination;
+			$.fn.jcider.hideControls = hideControls;
+			$.fn.jcider.showControls = showControls;
+			$.fn.jcider.toggleControls = toggleControls;
 
 		});
 

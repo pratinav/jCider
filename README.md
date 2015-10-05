@@ -37,9 +37,6 @@ If you have a problem to operate the plugin or set it up, the issues page is not
 **Don't forget to link [jQuery](https://jquery.com) before the jCider file.**
 
 
-**If you want touch and swipe support link the ```jquery.mobile.custom.min.js``` file as well.**
-
-
 Like this:
 
 ```
@@ -48,9 +45,7 @@ Like this:
 
 ```
 <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-// Only if you want swipe support
-<script type="text/javascript" src="PATH_TO_FILE/jquery.mobile.custom.min.js"></script>
-<script type="text/javascript" src="PATH_TO_FILE/jclider.min.js"></script>
+<script type="text/javascript" src="PATH_TO_FILE/jcider.min.js"></script>
 ```
 
 **CDN**
@@ -61,8 +56,6 @@ Like this:
 
 ```
 <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-// Only if you want swipe support
-<script type="text/javascript" src="PATH_TO_FILE/jquery.mobile.custom.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.jcider/latest/jcider.min.js"></script>
 ```
 
@@ -73,7 +66,7 @@ Like this:
 For [Bower](http://bower.io)-
 
 
-```bower install --save jcider```
+```bower install jcider --save```
 
 
 For [NPM](http://npmjs.com)-
@@ -129,10 +122,10 @@ For the rest of the docs we will refer to the outermost element as the **wrapper
 ####CSS
 
 
-Do not give the **'slides' (innermost elements)** any width or height. The width and height given to the **'wrapper' (outermost element)**, will be given to the slides automatically.
+You can give any styles to any of the elements, as per your choice. The **slider element** is only for the plugin to function, so you do not need to style this element.
 
 
-You can style each slide through the selector for the **slide elements**.
+You can give any dimensions to the **'slides' (innermost elements)** . If you want a variable width/height slider, You can set variable width/height to `true` in the [settings (more information below)](#advance-usage--settings) .
 
 
 ####Basic Usage
@@ -157,27 +150,43 @@ You can pass in multiple options as arguments for the ```.jcider()``` function. 
 
 ```
 $('yourWrapperElementHere').jcider({
-	visibleSlides: 1,
-	fading: false,
-	easing: 'ease-in-out',
-	controls: true,
-	pagination: true,
-	transitionDuration: 400,
-	autoplay: false,
-	slideDuration: 3000
+	looping: true, // For looping
+	visibleSlides: 1, // Visible no. of slides
+	variableWidth: false, // For variable width
+	variableHeight: true, // For variable height
+	fading: false, // For fading/sliding effect
+	easing: 'ease-in-out', // For easing
+	transitionDuration: 400, // Duration of slide transition
+	autoplay: false, // Duh...
+	slideDuration: 3000, // Duration between each slide change in autoplay
+	controls: true, // For visibility of nav-arrows
+	controlsWrapper: 'div.jcider-nav', // Element for nav wrapper
+	controlsLeft: ['span.jcider-nav-left', ''], // Element for nav-left 
+	controlsRight: ['span.jcider-nav-right', ''], // Element for nav-right
+	pagination: true, // For visibility of pagination
+	paginationWrapper: 'div.jcider-pagination', // Element for pagination wrapper
+	paginationPoint: 'div.jcider-pagination-point' // Element for pagination points
 });
 ```
 
 | Setting Name | Value | Description | Default |
 |--------------|-------|-------------|---------|
+| looping | boolean | Selects if looping is there or not. | true |
 | visibleSlides | integer | Selects the number of slides visble at a time. | 1 |
+| variableWidth | boolean | Selects if the wrapper should resize with the slide width or not. | false |
+| variableHeight | boolean | Selects if the wrapper should resize with the slide height or not. | true |
 | fading | boolean | Selects the type of transition. true is fading. ```false``` is sliding. | false |
 | easing | string | Selects the type of easing to be used for CSS animations. | 'ease-in-out' |
-| controls | boolean | Chooses whether the navigation controls are visible or not. ```true``` is visible. | true |
-| pagination | boolean | Chooses whether the pagination is visible or not. ```true``` is visible. | true |
 | transitionDuration | integer | The duration taken to transition from one slide to another, in milliseconds. | 400 |
 | autoplay | boolean | Chooses whether automatic transition between slides is on or off. ```true``` is on. | false |
 | slideDuration | integer | The duration between change of slides, in milliseconds. Only applicable if autoplay is on. | 3000 |
+| controls | boolean | Chooses whether the navigation controls are visible or not. ```true``` is visible. | true |
+| controlsWrapper | string | Selector for the nav-wrapper. Element followed by an optional class. Multiple classes must be separated by periods. (Same as a CSS selector) Only classes allowed. | 'div.jcider-nav' |
+| controlsLeft | string | Selector for left button for nav. Element followed by an optional class. Multiple classes must be separated by periods. (Same as a CSS selector) Only classes allowed. | 'span.jcider-nav-left' |
+| controlsRight | string | Selector for right button for nav. Element followed by an optional class. Multiple classes must be separated by periods. (Same as a CSS selector) Only classes allowed. | 'span.jcider-nav-right' |
+| pagination | boolean | Chooses whether the pagination is visible or not. ```true``` is visible. | true |
+| paginationWrapper | string | Selector for pagination-wrapper. Element followed by an optional class. Multiple classes must be separated by periods. (Same as a CSS selector) Only classes allowed. | 'div.jcider-pagination' |
+| paginationPoints | string | Selector for pagination-points. Element followed by an optional class. Multiple classes must be separated by periods. (Same as a CSS selector) Only classes allowed. | 'span.jcider-pagination-point' |
 
 
 ####Using Multiple carousels in one page
@@ -230,13 +239,305 @@ $('.another-slider').jcider();
 ```
 
 
+##Functions
+
+
+The plugin provides functions other than `.jcider()` to provide more extensibility, to suit your requirements.
+
+
+####`jcider.moveLeft()`
+
+
+The `jcider.moveLeft()` function makes the slider transition towards the left once.
+
+
+**Arguments:** none
+
+
+Example:
+
+```
+$(document).ready(function() {
+	$('#main').jcider({
+		//Some options
+	});
+
+	$('button#left').click(function() {
+		$('#main').jcider.moveLeft();
+	});
+});
+```
+
+
+####`jcider.moveRight()`
+
+
+The `jcider.moveRight()` function makes the slider transition towards the right once.
+
+
+**Arguments:** None
+
+
+Example:
+
+```
+$(document).ready(function() {
+	$('#main').jcider({
+		//Some options
+	});
+
+	$('button#right').click(function() {
+		$('#main').jcider.moveRight();
+	});
+});
+```
+
+
+####`jcider.moveTo(index)`
+
+
+The `jcider.moveTo(index)` function makes the slider transition to your desired slide.
+
+
+**Arguments:** index to be transitioned to. (integer)
+
+
+Example:
+
+```
+$(document).ready(function() {
+	$('#main').jcider({
+		//Some options
+	});
+
+	$('button#home').click(function() {
+		$('#main').jcider.moveTo(0);
+	});
+});
+```
+
+
+####`jcider.play()`
+
+
+The `jcider.play()` function makes the slider switch to autoplay.
+
+
+**Arguments:** None
+
+
+Example:
+
+```
+$(document).ready(function() {
+	$('#main').jcider({
+		//Some options
+	});
+
+	$('button#play').click(function() {
+		$('#main').jcider.play();
+	});
+});
+```
+
+
+####`jcider.pause()`
+
+
+The `jcider.pause()` function makes the slider stop autoplay.
+
+
+**Arguments:** None
+
+
+Example:
+
+```
+$(document).ready(function() {
+	$('#main').jcider({
+		//Some options
+	});
+
+	$('button#pause').click(function() {
+		$('#main').jcider.pause();
+	});
+});
+```
+
+
+####`jcider.togglePlay()`
+
+
+The `jcider.togglePlay()` function toggles between starting or stop autoplay.
+
+
+**Arguments:** None
+
+
+Example:
+
+```
+$(document).ready(function() {
+	$('#main').jcider({
+		//Some options
+	});
+
+	$('button#toggle').click(function() {
+		$('#main').jcider.togglePlay();
+	});
+});
+```
+
+
+####`jcider.hideControls()`
+
+
+The `jcider.hideControls()` function disables the Controls.
+
+
+**Arguments:** None
+
+
+Example:
+
+```
+$(document).ready(function() {
+	$('#main').jcider({
+		//Some options
+	});
+
+	$('button#hide').click(function() {
+		$('#main').jcider.hideControls();
+	});
+});
+```
+
+
+####`jcider.showControls()`
+
+
+The `jcider.showControls()` function enables the Controls.
+
+
+**Arguments:** None
+
+
+Example:
+
+```
+$(document).ready(function() {
+	$('#main').jcider({
+		//Some options
+	});
+
+	$('button#show').click(function() {
+		$('#main').jcider.showControls();
+	});
+});
+```
+
+
+####`jcider.toggleControls()`
+
+
+The `jcider.toggleControls()` function toggles between enabling and disabling the Controls.
+
+
+**Arguments:** None
+
+
+Example:
+
+```
+$(document).ready(function() {
+	$('#main').jcider({
+		//Some options
+	});
+
+	$('button#show').click(function() {
+		$('#main').jcider.showControls();
+	});
+});
+```
+
+
+####`jcider.hidePagination()`
+
+
+The `jcider.hidePagination()` function disables the pagination.
+
+
+**Arguments:** None
+
+
+Example:
+
+```
+$(document).ready(function() {
+	$('#main').jcider({
+		//Some options
+	});
+
+	$('button#hide').click(function() {
+		$('#main').jcider.hidePagination();
+	});
+});
+```
+
+
+####`jcider.showPagination()`
+
+
+The `jcider.showPagination()` function enables the pagination.
+
+
+**Arguments:** None
+
+
+Example:
+
+```
+$(document).ready(function() {
+	$('#main').jcider({
+		//Some options
+	});
+
+	$('button#show').click(function() {
+		$('#main').jcider.showPagination();
+	});
+});
+```
+
+
+####`jcider.togglePagination()`
+
+
+The `jcider.togglePagination()` function toggles between enabling and disabling the pagination.
+
+
+**Arguments:** None
+
+
+Example:
+
+```
+$(document).ready(function() {
+	$('#main').jcider({
+		//Some options
+	});
+
+	$('button#show').click(function() {
+		$('#main').jcider.togglePagination();
+	});
+});
+```
+
+
+
 ##Dependencies
 
 
 [jQuery](https://jquery.com) - **Using the lastest version is recommended**
-
-
-**Optional-** Custom jQuery-mobile (included)
 
 
 
