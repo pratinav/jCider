@@ -1,4 +1,4 @@
-# [jCider](http://pratinav.tk/jCider)
+#[jCider](http://pratinav.tk/jCider)
 
 
 An extensive and responsive jQuery carousel plugin that will slide your world.
@@ -182,8 +182,8 @@ $('yourWrapperElementHere').jcider({
 | slideDuration | integer | The duration between change of slides, in milliseconds. Only applicable if autoplay is on. | 3000 |
 | controls | boolean | Chooses whether the navigation controls are visible or not. ```true``` is visible. | true |
 | controlsWrapper | string | Selector for the nav-wrapper. Element followed by an optional class. Multiple classes must be separated by periods. (Same as a CSS selector) Only classes allowed. | 'div.jcider-nav' |
-| controlsLeft | string | Selector for left button for nav. Element followed by an optional class. Multiple classes must be separated by periods. (Same as a CSS selector) Only classes allowed. | 'span.jcider-nav-left' |
-| controlsRight | string | Selector for right button for nav. Element followed by an optional class. Multiple classes must be separated by periods. (Same as a CSS selector) Only classes allowed. | 'span.jcider-nav-right' |
+| controlsLeft | array > string * 2 | Selector for left button for nav. Array containing two strings. The first string is the Element followed by an optional class. Multiple classes must be separated by periods. (Same as a CSS selector) Only classes allowed. The second string is optional content. | ['span.jcider-nav-left', ''] |
+| controlsRight | array > string * 2 | Selector for right button for nav. Array containing two strings. The first string is the Element followed by an optional class. Multiple classes must be separated by periods. (Same as a CSS selector) Only classes allowed. | ['span.jcider-nav-right', ''] |
 | pagination | boolean | Chooses whether the pagination is visible or not. ```true``` is visible. | true |
 | paginationWrapper | string | Selector for pagination-wrapper. Element followed by an optional class. Multiple classes must be separated by periods. (Same as a CSS selector) Only classes allowed. | 'div.jcider-pagination' |
 | paginationPoints | string | Selector for pagination-points. Element followed by an optional class. Multiple classes must be separated by periods. (Same as a CSS selector) Only classes allowed. | 'span.jcider-pagination-point' |
