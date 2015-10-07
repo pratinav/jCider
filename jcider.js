@@ -1,185 +1,118 @@
-/*!====================================================
- * jCider 3.0.2  (http://pratinav.tk/jCider)
- *=====================================================
- * @author: Pratinav Bagla (http://pratinav.tk)
- * @license: The MIT License (https://github.com/Pratinav/jCider/blob/master/LICENSE.txt)
- *=====================================================*/
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2015 Pratinav Bagla
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+/*!
+ * jCider v3.0.3 (http://pratinav.tk/jCider)
+ * (c) 2015 Pratinav Bagla (http://pratinav.tk)
+ * Released under the MIT License (https://github.com/Pratinav/jCider/blob/master/LICENSE.txt)
  **/
 
 (function($){
 
-	$.fn.jcider = function (options) {
+	/**
+	* Get DOM element from selector
+	*/
+	function getElementString(arr, content) {
+		if (content===undefined) {
+			content = '';
+		}
+		var tag = '',
+			classes = '',
+			id = '',
+			current = 'tag';
+		for (var x = 0; x < arr.length; x++) {
+			var ch = arr[x];
+			if (ch==='.') {
+				classes += x>1 ? ' ' : '';
+				current = 'class';
+				continue;
+			} else if (ch === '#') {
+				current = 'id';
+				continue;
+			}
+			if (current === 'tag') {
+				tag += ch;
+			} else if (current === 'class') {
+				classes += ch;
+			} else if (current==='id') {
+				id += ch;
+			}
+		}
+		el = '<'+tag;
+		if (id !== '') el += ' id=\"'+id+'\"';
+		if (classes !== '') el += ' class=\"' + classes + '\"';
+		el += '>'+content+'</'+tag+'>';
+		return el;
+	}
 
-		// Declare all options.
+	/**
+	* Detect IE
+	*/
+	function detectIE() {
+		var ua = window.navigator.userAgent;
+		var msie = ua.indexOf("MSIE ");
+		var version = parseInt(ua.substring(msie + 5, ua.indexOf(".", msie)));
+
+		return (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) ? true : false;
+	}
+
+	/**
+	* Detect if 3dtransfroms are supported
+	*/
+	function check3d() {
+		if (!window.getComputedStyle) {
+			return false;
+		}
+		var el = document.createElement('p'),
+			check,
+			transforms = {
+			'webkitTransform':'-webkit-transform',
+			'OTransform':'-o-transform',
+			'msTransform':'-ms-transform',
+			'MozTransform':'-moz-transform',
+			'transform':'transform'
+			};
+		document.body.insertBefore(el, null);
+		for (var t in transforms) {
+			if (el.style[t] !== undefined) {
+				el.style[t] = "translate3d(1px,1px,1px)";
+				check = window.getComputedStyle(el).getPropertyValue(transforms[t]);
+			}
+		}
+		document.body.removeChild(el);
+		return (check !== undefined && check.length > 0 && check !== "none");
+	}
+
+	$.fn.jcider = function (settings) {
+
+		/**
+		* Declare all settings
+		*/
 		var config = $.extend({
-			looping: true, // For looping
-			visibleSlides: 1, // Visible no. of slides
-			variableWidth: false, // For variable width
-			variableHeight: true, // For variable height
-			fading: false, // For fading/sliding effect
-			easing: 'ease-in-out', // For easing
-			transitionDuration: 400, // Duration of slide transition
-			autoplay: false, // Duh...
-			slideDuration: 3000, // Duration between each slide change in autoplay
-			controls: true, // For visibility of nav-arrows
-			controlsWrapper: 'div.jcider-nav', // Element for nav wrapper
-			controlsLeft: ['span.jcider-nav-left', ''], // Element for nav-left 
-			controlsRight: ['span.jcider-nav-right', ''], // Element for nav-right
-			pagination: true, // For visibility of pagination
-			paginationWrapper: 'div.jcider-pagination', // Element for pagination wrapper
-			paginationPoint: 'div.jcider-pagination-point' // Element for pagination points
-		}, options);
+			looping: true,
+			visibleSlides: 1,
+			variableWidth: false,
+			variableHeight: true,
+			fading: false,
+			easing: 'cubic-bezier(.694, .0482, .335, 1)',
+			transitionDuration: 400,
+			autoplay: false,
+			slideDuration: 3000,
+			controls: true,
+			controlsWrapper: 'div.jcider-nav',
+			controlsLeft: ['span.jcider-nav-left', ''],
+			controlsRight: ['span.jcider-nav-right', ''],
+			pagination: true,
+			paginationWrapper: 'div.jcider-pagination',
+			paginationPoint: 'div.jcider-pagination-point'
+		}, settings);
+
 
 		return this.each(function(){
 
-			// Detect browser
-			if(!$.browser){
 
-				$.browser = {};
-				$.browser.mozilla = false;
-				$.browser.webkit = false;
-				$.browser.opera = false;
-				$.browser.safari = false;
-				$.browser.chrome = false;
-				$.browser.msie = false;
-				$.browser.android = false;
-				$.browser.blackberry = false;
-				$.browser.ios = false;
-				$.browser.operaMobile = false;
-				$.browser.windowsMobile = false;
-				$.browser.mobile = false;
-
-				var nAgt = navigator.userAgent;
-				$.browser.ua = nAgt;
-
-				$.browser.name  = navigator.appName;
-				$.browser.fullVersion  = ''+parseFloat(navigator.appVersion);
-				$.browser.majorVersion = parseInt(navigator.appVersion,10);
-				var nameOffset,verOffset,ix;
-
-			// In Opera, the true version is after "Opera" or after "Version"
-				if ((verOffset=nAgt.indexOf("Opera"))!=-1) {
-					$.browser.opera = true;
-					$.browser.name = "Opera";
-					$.browser.fullVersion = nAgt.substring(verOffset+6);
-					if ((verOffset=nAgt.indexOf("Version"))!=-1)
-						$.browser.fullVersion = nAgt.substring(verOffset+8);
-				}
-
-			// In MSIE < 11, the true version is after "MSIE" in userAgent
-				else if ( (verOffset=nAgt.indexOf("MSIE"))!=-1) {
-					$.browser.msie = true;
-					$.browser.name = "Microsoft Internet Explorer";
-					$.browser.fullVersion = nAgt.substring(verOffset+5);
-				}
-
-			// In TRIDENT (IE11) => 11, the true version is after "rv:" in userAgent
-				else if (nAgt.indexOf("Trident")!=-1 ) {
-					$.browser.msie = true;
-					$.browser.name = "Microsoft Internet Explorer";
-					var start = nAgt.indexOf("rv:")+3;
-					var end = start+4;
-					$.browser.fullVersion = nAgt.substring(start,end);
-				}
-
-			// In Chrome, the true version is after "Chrome"
-				else if ((verOffset=nAgt.indexOf("Chrome"))!=-1) {
-					$.browser.webkit = true;
-					$.browser.chrome = true;
-					$.browser.name = "Chrome";
-					$.browser.fullVersion = nAgt.substring(verOffset+7);
-				}
-			// In Safari, the true version is after "Safari" or after "Version"
-				else if ((verOffset=nAgt.indexOf("Safari"))!=-1) {
-					$.browser.webkit = true;
-					$.browser.safari = true;
-					$.browser.name = "Safari";
-					$.browser.fullVersion = nAgt.substring(verOffset+7);
-					if ((verOffset=nAgt.indexOf("Version"))!=-1)
-						$.browser.fullVersion = nAgt.substring(verOffset+8);
-				}
-			// In Safari, the true version is after "Safari" or after "Version"
-				else if ((verOffset=nAgt.indexOf("AppleWebkit"))!=-1) {
-					$.browser.webkit = true;
-					$.browser.name = "Safari";
-					$.browser.fullVersion = nAgt.substring(verOffset+7);
-					if ((verOffset=nAgt.indexOf("Version"))!=-1)
-						$.browser.fullVersion = nAgt.substring(verOffset+8);
-				}
-			// In Firefox, the true version is after "Firefox"
-				else if ((verOffset=nAgt.indexOf("Firefox"))!=-1) {
-					$.browser.mozilla = true;
-					$.browser.name = "Firefox";
-					$.browser.fullVersion = nAgt.substring(verOffset+8);
-				}
-			// In most other browsers, "name/version" is at the end of userAgent
-				else if ( (nameOffset=nAgt.lastIndexOf(' ')+1) < (verOffset=nAgt.lastIndexOf('/')) ){
-					$.browser.name = nAgt.substring(nameOffset,verOffset);
-					$.browser.fullVersion = nAgt.substring(verOffset+1);
-					if ($.browser.name.toLowerCase()==$.browser.name.toUpperCase()) {
-						$.browser.name = navigator.appName;
-					}
-				}
-
-				/*Check all mobile environments*/
-				$.browser.android = (/Android/i).test(nAgt);
-				$.browser.blackberry = (/BlackBerry/i).test(nAgt);
-				$.browser.ios = (/iPhone|iPad|iPod/i).test(nAgt);
-				$.browser.operaMobile = (/Opera Mini/i).test(nAgt);
-				$.browser.windowsMobile = (/IEMobile/i).test(nAgt);
-				$.browser.mobile = $.browser.android || $.browser.blackberry || $.browser.ios || $.browser.windowsMobile || $.browser.operaMobile;
-
-
-			// trim the fullVersion string at semicolon/space if present
-				if ((ix=$.browser.fullVersion.indexOf(";"))!=-1)
-					$.browser.fullVersion=$.browser.fullVersion.substring(0,ix);
-				if ((ix=$.browser.fullVersion.indexOf(" "))!=-1)
-					$.browser.fullVersion=$.browser.fullVersion.substring(0,ix);
-
-				$.browser.majorVersion = parseInt(''+$.browser.fullVersion,10);
-				if (isNaN($.browser.majorVersion)) {
-					$.browser.fullVersion  = ''+parseFloat(navigator.appVersion);
-					$.browser.majorVersion = parseInt(navigator.appVersion,10);
-				}
-				$.browser.version = $.browser.majorVersion;
-			}
-
-			function getElementString(arr, content) {
-				if (content===undefined) {
-					content = '';
-				}
-				var el = '<'+arr[0]+' class=\"';
-				for (var x = 1; x < arr.length; x++) {
-					el += arr[x];
-					if (x!==arr.length-1) el += ' ';
-				}
-				el+='\">'+content+'</'+arr[0]+'>';
-				return el;
-			}
-
-			var $wrapper = $(this),
+			/**
+			* Declare all variables
+			*/
+			var $window = $(window),
+				$wrapper = $(this),
 				$slideWrap = $wrapper.children(),
 				$slides = $slideWrap.children(),
 				slideCount = $slides.length,
@@ -192,18 +125,21 @@
 				currentWidth,
 				currentHeight,
 				initPos = false,
-				fallback = false,
+				fallback = check3d(),
+				ie = detectIE(),
 				pause = false,
-				offset = 0;
+				offset = [],
+				auto = false;
 
-			if ((($.browser.msie || $.browser.mozilla) && $.browser.version < 10) || ($.browser.chrome && $.browser.version < 12) || ($.browser.safari && $.browser.version < 3.2) || ($.browser.opera && $.browser.version < 15) || ($.browser.operaMobile && $.browser.version < 30) || ($.browser.android && $.browser.version < 3)) {
-				fallback = true;
-			}
 
+		    /**
+		    * Styles
+		    */
 			$wrapper.css({
 				'position': 'relative',
 				'overflow': 'hidden',
 				'transition': 'all '+config.transitionDuration+'ms',
+				'min-width': parseInt($slides.css('width'))*config.visibleSlides + 'px'
 			});
 
 			$slideWrap.css({
@@ -224,7 +160,15 @@
 					'transition': 'all '+config.transitionDuration+'ms '+config.easing,
 					'left': '0',
 					'transform': 'translate3d(0,0,0)',
-					'cursor': 'move'
+					'cursor': 'move',
+					'-webkit-backface-visibility': 'hidden',
+					'-moz-backface-visibility': 'hidden',
+					'-ms-backface-visibility': 'hidden',
+					'backface-visibility': 'hidden',
+					'-webkit-perspective': '1000',
+					'-moz-perspective': '1000',
+					'-ms-perspective': '1000',
+					'perspective': '1000'
 				});
 
 				$slides.css({
@@ -233,50 +177,63 @@
 				});
 			}
 
+
+			/**
+			* Calculate width and offset of all slides
+			*/
 			function calcWidth() {
 				var width = 0;
+				offset = [];
 				for (var x = 0; x < slideCount; x++) {
-					width+= $slides.eq(x).outerWidth(true);
+					offset[x] = width;
+					width+= $slides.eq(x).outerWidth();
 				}
 				return width;
 			}
 
-			function calcOff(index) {
-				var $el = $slides.eq(index),
-					offset = $el.offset().left,
-					wrapperOffset = $slideWrap.offset().left;
-				return wrapperOffset-offset;
-			}
 
-
+			/**
+			* Initialize nav
+			*/
 			function initControls() {
-				if (config.controls !== true) return;
-				var element = config.controlsWrapper.split('.');
+				var element = config.controlsWrapper.split('');
 				$wrapper.append(getElementString(element));
 				$controlsWrapper = $wrapper.find(config.controlsWrapper);
-				$controlsWrapper.append(getElementString(config.controlsLeft[0].split('.'), config.controlsLeft[1]));
-				$controlsWrapper.append(getElementString(config.controlsRight[0].split('.'), config.controlsRight[1]));
+				$controlsWrapper.append(getElementString(config.controlsLeft[0].split(''), config.controlsLeft[1]));
+				$controlsWrapper.append(getElementString(config.controlsRight[0].split(''), config.controlsRight[1]));
 				$controlsLeft = $controlsWrapper.find(config.controlsLeft[0]);
 				$controlsRight = $controlsWrapper.find(config.controlsRight[0]);
+				if (config.pagination !== true) {
+					$controlsWrapper.hide();
+				}
 			}
 
 
+			/**
+			* Initialize pagination
+			*/
 			function initPagination() {
-				if (config.pagination !== true) return;
-				var pagWrap = getElementString(config.paginationWrapper.split('.'));
+				var pagWrap = getElementString(config.paginationWrapper.split(''));
 				$wrapper.append(pagWrap);
 				$pagination = $wrapper.find(config.paginationWrapper);
-				var pagPoint = getElementString(config.paginationPoint.split('.'));
+				var pagPoint = getElementString(config.paginationPoint.split(''));
 				for (var x = 0; x < Math.ceil(slideCount/config.visibleSlides); x++) {
 					$pagination.append(pagPoint);
 				}
 				$paginationPoints = $pagination.children(config.paginationPoint);
+				if (config.pagination !== true) {
+					$pagination.hide();
+				}
 			}
 
 
+			/**
+			* Move to slide
+			* @param index: Index of desired slide
+			*/
 			function moveTo(index) {
 				if (!config.looping) {
-					if (index > slideCount-1 || index < 0) {
+					if (index+(config.visibleSlides-1) > slideCount-1 || index < 0) {
 						return;
 					}
 
@@ -306,7 +263,7 @@
 				}
 				if (index < 0) {
 					index = slideCount-1;
-				} else if (index > slideCount-1) {
+				} else if (index+(config.visibleSlides-1) > slideCount-1) {
 					index = 0;
 				}
 				$current = $slides.eq(index);
@@ -325,7 +282,8 @@
 					}
 				}
 				if (config.pagination) {
-					$paginationPoints.eq(index).addClass('active');
+					var nextPoint = config.visibleSlides === 1 ? index :Math.floor((index+config.visibleSlides >= slideCount ? slideCount : index)/config.visibleSlides);
+					$paginationPoints.eq(nextPoint).addClass('active');
 				}
 				$current.addClass('active');
 				if (config.fading) {
@@ -334,16 +292,16 @@
 					}
 					$current.fadeIn(config.transitionDuration);
 				} else {
-					offset = calcOff(index);
+					nextOffset = offset[index];
 					if (fallback) {
 						$slideWrap.css({
-							'left': '-'+offset()+'px'
+							'left': '-'+nextOffset+'px'
 						});
 					} else {
 						$slideWrap.css({
-							'-webkit-transform': 'translate3d('+offset +'px,0, 0)',
-							'-moz-transform': 'translate3d('+offset +'px,0, 0)',
-							'transform': 'translate3d('+offset +'px,0, 0)'
+							'-webkit-transform': 'translate3d('+nextOffset +'px,0, 0)',
+							'-moz-transform': 'translate3d('+nextOffset +'px,0, 0)',
+							'transform': 'translate3d('+nextOffset +'px,0, 0)'
 						});
 					}
 				}
@@ -352,49 +310,159 @@
 				}
 			}
 
+
+			/**
+			* Move to next slide (to right)
+			*/
 			function next() {
 				moveTo($current.index()+1);
 			}
 
+
+			/**
+			* Move to previous slide (to left)
+			*/
 			function prev() {
 				moveTo($current.index()-1);
 			}
 
+
+			/**
+			* Switch autoplay on
+			*/
 			function play() {
-				next();
+				if (!config.autoplay) {
+					config.autoplay = true;
+				}
 				if (pause) {
 					pause = false;
 					return;
 				}
 				setTimeout(function() {
+					next();
 					play();
 				},config.slideDuration);
 			}
 
+
+			/**
+			* Switch autoplay off
+			*/
 			function stopPlay() {
+				if (config.autoplay) {
+					config.autoplay = false;
+				}
 				if (!pause) {
 					pause = true;
 				}
 			}
 
+
+			/**
+			* Toggle between switching autoplay on/off
+			*/
 			function togglePlay(){
 				if (!pause) {
-					pause = true;
+					stopPlay();
 				} else {
 					pause = false;
 					play();
 				}
 			}
 
-			function init() {
+
+			/**
+			* Hide nav
+			*/
+			function hideControls() {
 				if (config.controls) {
-					initControls();
+					config.controls = false;
 				}
+				if ($controlsWrapper.css('display') !== 'none') {
+					$controlsWrapper.hide();
+				}
+			}
 
+
+			/**
+			* Show nav
+			*/
+			function showControls() {
+				if (!config.controls) {
+					config.controls = true;
+				}
+				if ($controlsWrapper.css('display') === 'none') {
+					$controlsWrapper.show();
+				}
+			}
+
+
+			/**
+			* Toggle between disabling/enabling nav
+			*/
+			function toggleControls() {
+				if (config.controls) {
+					config.controls = false;
+				} else {
+					config.controls = true;
+				}
+				if ($controlsWrapper.css('display') !== 'none') {
+					$controlsWrapper.hide();
+				} else {
+					$controlsWrapper.show();
+				}
+			}
+
+
+			/**
+			* Hide pagination
+			*/
+			function hidePagination() {
 				if (config.pagination) {
-					initPagination();
+					config.pagination = false;
 				}
+				if ($pagination.css('display') !== 'none') {
+					$pagination.hide();
+				}
+			}
 
+
+			/**
+			* Show pagination
+			*/
+			function showPagination() {
+				if (!config.pagination) {
+					config.pagination = true;
+				}
+				if ($pagination.css('display') === 'none') {
+					$pagination.show();
+				}
+			}
+
+
+			/**
+			* Toggle between disabling/enabling pagination
+			*/
+			function togglePagination() {
+				if (config.pagination) {
+					config.pagination = false;
+				} else {
+					config.pagination = true;
+				}
+				if ($pagination.css('display') !== 'none') {
+					$pagination.hide();
+				} else {
+					$pagination.show();
+				}
+			}
+
+
+			/**
+			* Initialize slider
+			*/
+			function init() {
+				initControls();
+				initPagination();
 				moveTo(0);
 
 				if (config.autoplay) {
@@ -403,97 +471,65 @@
 			}
 			init();
 
-			function hideControls() {
-				if (!config.controls) {
-					return;
-				}
-				if ($controlsWrapper.css('display') !== 'none') {
-					$controlsWrapper.hide();
-				}
-			}
 
-			function showControls() {
-				if (!config.controls) {
-					return;
-				}
-				if ($controlsWrapper.css('display') === 'none') {
-					$controlsWrapper.show();
-				}
-			}
-
-			function toggleControls() {
-				if (!config.controls) {
-					return;
-				}
-				if ($controlsWrapper.css('display') !== 'none') {
-					$controlsWrapper.hide();
-				} else {
-					$controlsWrapper.show();
-				}
-			}
-
-			function hidePagination() {
-				if (!config.pagination) {
-					return;
-				}
-				if ($pagination.css('display') !== 'none') {
-					$pagination.hide();
-				}
-			}
-
-			function showPagination() {
-				if (!config.pagination) {
-					return;
-				}
-				if ($pagination.css('display') === 'none') {
-					$pagination.show();
-				}
-			}
-
-			function togglePagination() {
-				if (!config.pagination) {
-					return;
-				}
-				if ($pagination.css('display') !== 'none') {
-					$pagination.hide();
-				} else {
-					$pagination.show();
-				}
-			}
-
+			/**
+			* Event handler for click on pagination points
+			*/
 			$paginationPoints.on('click', function(e) {
 				e.stopPropagation();
 				var index = $(this).index();
+				index = index+(config.visibleSlides-1) >= slideCount-1 ? slideCount-config.visibleSlides :config.visibleSlides*index;
 				moveTo(index);
 				return false;
 			});
 
+
+			/**
+			* Event handler for click on left-nav
+			*/
 			$controlsLeft.on('click', function(e) {
 				e.stopPropagation();
 				prev();
 				return false;
 			});
 
+
+			/**
+			* Event handler for click on right-nav
+			*/
 			$controlsRight.on('click', function(e) {
 				e.stopPropagation();
 				next();
 				return false;
 			});
 
+
+			/**
+			* Declare variables for touch and drag event handlers
+			*/
 			var mouseDown = false,
 				mouseMove = false,
 				mouseStart = 0,
+				mouseX = 0,
 				touchStartY = 0,
-				mouseX = 0;
+				touchStartX = 0;
+
 			$wrapper.on({
+				/**
+				* Event handler for mouse-on-click
+				*/
 				'mousedown': function(e) {
 					mouseDown = true;
-					if ($.browser.msie) {
+					if (ie) {
 						mouseStart = event.clientX + document.body.scrollLeft;
 					} else {
 						mouseStart = e.pageX;
 					}
 				},
+
+				/**
+				* Event handler for mouse-off-click
+				*/
 				'mouseup': function(e) {
 					if (!mouseMove) {
 						return;
@@ -506,28 +542,72 @@
 						prev();
 					}
 				},
+
+				/**
+				* Event handler for mouse-movement
+				*/
 				'mousemove': function(e) {
 					if (!mouseDown) return;
 					mouseMove = true;
-					if ($.browser.msie) {
+					if (ie) {
 						mouseX = event.clientX + document.body.scrollLeft;
 					} else {
 						mouseX = e.pageX;
 					}
 				},
+
+				/**
+				* Event handler for beginning of touch
+				*/
 				'touchstart': function(e) {
 					touchStartY = e.originalEvent.touches[0].clientY;
+					touchStartX = e.originalEvent.touches[0].clientX;
 				},
+
+				/**
+				* Event handler for end of touch
+				*/
 				'touchend': function(e) {
-					var touchEndY = e.originalEvent.changedTouches[0].clientY;
-					if(touchStartY > touchEndY+10) next();
-					else if(touchStartY < touchEndY-10) prev();
+					var touchEndY = e.originalEvent.changedTouches[0].clientY,
+						touchEndX = e.originalEvent.changedTouches[0].clientX,
+						yDiff = touchStartY - touchEndY,
+						xDiff = touchStartX - touchEndX;
+					if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
+				        if ( xDiff > 5 ) {
+				            next();
+				        } else {
+				            prev();
+				        }                       
+				    }
+					touchStartY = null;
+					touchStartX = null;
 				},
+
+				/**
+				* Event handler for touch movement
+				*/
 				'touchmove': function(e) {
 					if(e.preventDefault) { e.preventDefault(); }
 				}
 			});
 
+
+			/**
+			* Update dimensions on resize
+			*/
+			$window.resize(function() {
+				if (!config.fading) {
+					$slideWrap.css({
+						'width': calcWidth()+'px'
+					});
+					moveTo($current.index());
+				}
+			});
+
+
+			/**
+			* Declare all sub-options
+			*/
 			$.fn.jcider.moveTo = moveTo;
 			$.fn.jcider.moveRight = next;
 			$.fn.jcider.moveLeft = prev;
