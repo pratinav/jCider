@@ -1,5 +1,5 @@
 /*!
- * jCider v3.0.3 (http://pratinav.tk/jCider)
+ * jCider v3.0.4 (http://pratinav.tk/jCider)
  * (c) 2015 Pratinav Bagla (http://pratinav.tk)
  * Released under the MIT License (https://github.com/Pratinav/jCider/blob/master/LICENSE.txt)
  **/
@@ -56,28 +56,32 @@
 	/**
 	* Detect if 3dtransfroms are supported
 	*/
-	function check3d() {
+	function checkFallback() {
 		if (!window.getComputedStyle) {
 			return false;
 		}
 		var el = document.createElement('p'),
-			check,
+			check3d,
+			check2d = [],
 			transforms = {
-			'webkitTransform':'-webkit-transform',
-			'OTransform':'-o-transform',
-			'msTransform':'-ms-transform',
-			'MozTransform':'-moz-transform',
-			'transform':'transform'
+				'webkitTransform':'-webkit-transform',
+				'OTransform':'-o-transform',
+				'msTransform':'-ms-transform',
+				'MozTransform':'-moz-transform',
+				'transform':'transform'
 			};
 		document.body.insertBefore(el, null);
 		for (var t in transforms) {
 			if (el.style[t] !== undefined) {
+				check2d.push();
 				el.style[t] = "translate3d(1px,1px,1px)";
-				check = window.getComputedStyle(el).getPropertyValue(transforms[t]);
+				check3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
 			}
 		}
 		document.body.removeChild(el);
-		return (check !== undefined && check.length > 0 && check !== "none");
+		if (check3d !== undefined && check3d.length > 0 && check3d !== 'none') return '3d';
+		else if (check2d.length > 0) return '2d';
+		else return false;
 	}
 
 	$.fn.jcider = function (settings) {
@@ -125,7 +129,7 @@
 				currentWidth,
 				currentHeight,
 				initPos = false,
-				fallback = check3d(),
+				fallback = checkFallback(),
 				ie = detectIE(),
 				pause = false,
 				offset = [],
@@ -138,43 +142,42 @@
 			$wrapper.css({
 				'position': 'relative',
 				'overflow': 'hidden',
-				'transition': 'all '+config.transitionDuration+'ms',
-				'min-width': parseInt($slides.css('width'))*config.visibleSlides + 'px'
+				'transition': 'all '+config.transitionDuration+'ms ease-out'
 			});
 
 			$slideWrap.css({
-				'position': 'relative',
-				'height': '100%'
+				'height': '100%',
+				'width': '100%'
+			});
+
+			$slides.css({
+				'position': 'absolute'
 			});
 
 			if (config.fading) {
 				$slideWrap.css({
 					'width': '100%'
 				});
-				$slides.css({
-					'position': 'absolute'
-				}).not(0).fadeOut();
+				$slides.not(0).fadeOut();
 			} else {
 				$slideWrap.css({
-					'width': calcWidth()+'px',
 					'transition': 'all '+config.transitionDuration+'ms '+config.easing,
 					'left': '0',
-					'transform': 'translate3d(0,0,0)',
-					'cursor': 'move',
-					'-webkit-backface-visibility': 'hidden',
-					'-moz-backface-visibility': 'hidden',
-					'-ms-backface-visibility': 'hidden',
-					'backface-visibility': 'hidden',
-					'-webkit-perspective': '1000',
-					'-moz-perspective': '1000',
-					'-ms-perspective': '1000',
-					'perspective': '1000'
+					'cursor': 'move'
 				});
 
-				$slides.css({
-					'display': 'inline-block',
-					'float': 'left'
-				});
+				if (fallback==='3d') {
+					$slideWrap.css({
+						'-webkit-backface-visibility': 'hidden',
+						'-moz-backface-visibility': 'hidden',
+						'-ms-backface-visibility': 'hidden',
+						'backface-visibility': 'hidden',
+						'-webkit-perspective': '1000',
+						'-moz-perspective': '1000',
+						'-ms-perspective': '1000',
+						'perspective': '1000'
+					});
+				}
 			}
 
 
@@ -185,7 +188,8 @@
 				var width = 0;
 				offset = [];
 				for (var x = 0; x < slideCount; x++) {
-					offset[x] = width;
+					offset[x] = -width;
+					$slides.eq(x).css('left', width);
 					width+= $slides.eq(x).outerWidth();
 				}
 				return width;
@@ -293,15 +297,23 @@
 					$current.fadeIn(config.transitionDuration);
 				} else {
 					nextOffset = offset[index];
-					if (fallback) {
-						$slideWrap.css({
-							'left': '-'+nextOffset+'px'
-						});
-					} else {
+					if (fallback === '3d') {
 						$slideWrap.css({
 							'-webkit-transform': 'translate3d('+nextOffset +'px,0, 0)',
 							'-moz-transform': 'translate3d('+nextOffset +'px,0, 0)',
 							'transform': 'translate3d('+nextOffset +'px,0, 0)'
+						});
+					} else if (fallback === '2d') {
+						$slideWrap.css({
+							'-webkit-transform': 'translate('+nextOffset +'px,0)',
+							'-moz-transform': 'translate('+nextOffset +'px,0)',
+							'-ms-transform': 'translate('+nextOffset +'px,0)',
+							'-o-transform': 'translate('+nextOffset +'px,0)',
+							'transform': 'translate('+nextOffset +'px,0)'
+						});
+					} else {
+						$slideWrap.css({
+							'left': nextOffset+'px'
 						});
 					}
 				}
@@ -463,6 +475,7 @@
 			function init() {
 				initControls();
 				initPagination();
+				calcWidth();
 				moveTo(0);
 
 				if (config.autoplay) {
@@ -470,6 +483,9 @@
 				}
 			}
 			init();
+			$wrapper.load(function() {
+				calcWidth();
+			});
 
 
 			/**
@@ -597,9 +613,7 @@
 			*/
 			$window.resize(function() {
 				if (!config.fading) {
-					$slideWrap.css({
-						'width': calcWidth()+'px'
-					});
+					calcWidth();
 					moveTo($current.index());
 				}
 			});
