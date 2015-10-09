@@ -1,3 +1,12 @@
+/*
+ * jCider (http://pratinav.tk/jCider)
+ * (c) 2015 Pratinav Bagla (http://pratinav.tk)
+ * Released under the MIT License (https://github.com/Pratinav/jCider/blob/master/LICENSE.txt)
+ **/
+
+@charset "UTF-8";
+
+/*Default Font icons*/
 @import url(https://fontastic.s3.amazonaws.com/CoBsvmhLG8dQosPCdCFvBM/icons.css);
 
 /*Positioning and styling for navigation controls.*/
@@ -25,6 +34,7 @@
   font-size: 50px;
   color: white;
   transition: all 300ms;
+  line-height: 1;
 }
 
 .jcider-nav span.disabled {

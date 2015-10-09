@@ -1,5 +1,5 @@
 /*!
- * jCider v3.0.4 (http://pratinav.tk/jCider)
+ * jCider v3.0.5 (http://pratinav.tk/jCider)
  * (c) 2015 Pratinav Bagla (http://pratinav.tk)
  * Released under the MIT License (https://github.com/Pratinav/jCider/blob/master/LICENSE.txt)
  **/
@@ -132,53 +132,7 @@
 				fallback = checkFallback(),
 				ie = detectIE(),
 				pause = false,
-				offset = [],
-				auto = false;
-
-
-		    /**
-		    * Styles
-		    */
-			$wrapper.css({
-				'position': 'relative',
-				'overflow': 'hidden',
-				'transition': 'all '+config.transitionDuration+'ms ease-out'
-			});
-
-			$slideWrap.css({
-				'height': '100%',
-				'width': '100%'
-			});
-
-			$slides.css({
-				'position': 'absolute'
-			});
-
-			if (config.fading) {
-				$slideWrap.css({
-					'width': '100%'
-				});
-				$slides.not(0).fadeOut();
-			} else {
-				$slideWrap.css({
-					'transition': 'all '+config.transitionDuration+'ms '+config.easing,
-					'left': '0',
-					'cursor': 'move'
-				});
-
-				if (fallback==='3d') {
-					$slideWrap.css({
-						'-webkit-backface-visibility': 'hidden',
-						'-moz-backface-visibility': 'hidden',
-						'-ms-backface-visibility': 'hidden',
-						'backface-visibility': 'hidden',
-						'-webkit-perspective': '1000',
-						'-moz-perspective': '1000',
-						'-ms-perspective': '1000',
-						'perspective': '1000'
-					});
-				}
-			}
+				offset = [];
 
 
 			/**
@@ -190,7 +144,7 @@
 				for (var x = 0; x < slideCount; x++) {
 					offset[x] = -width;
 					$slides.eq(x).css('left', width);
-					width+= $slides.eq(x).outerWidth();
+					width+= $slides.eq(x).outerWidth(true);
 				}
 				return width;
 			}
@@ -232,12 +186,41 @@
 
 
 			/**
+			* Function to transition element to offset
+			* @param nextOffset: Desired offset
+			*/
+			function transition(nextOffset) {
+				if (fallback === '3d') {
+					$slideWrap.css({
+						'-webkit-transform': 'translate3d('+nextOffset +'px,0, 0)',
+						'-moz-transform': 'translate3d('+nextOffset +'px,0, 0)',
+						'transform': 'translate3d('+nextOffset +'px,0, 0)'
+					});
+				} else if (fallback === '2d') {
+					$slideWrap.css({
+						'-webkit-transform': 'translate('+nextOffset +'px,0)',
+						'-moz-transform': 'translate('+nextOffset +'px,0)',
+						'-ms-transform': 'translate('+nextOffset +'px,0)',
+						'-o-transform': 'translate('+nextOffset +'px,0)',
+						'transform': 'translate('+nextOffset +'px,0)'
+					});
+				} else {
+					$slideWrap.css({
+						'left': nextOffset+'px'
+					});
+				}
+			}
+
+
+			/**
 			* Move to slide
 			* @param index: Index of desired slide
 			*/
 			function moveTo(index) {
+				var start = index < 0,
+					last =  index + config.visibleSlides === slideCount + 1;
 				if (!config.looping) {
-					if (index+(config.visibleSlides-1) > slideCount-1 || index < 0) {
+					if (start || last) {
 						return;
 					}
 
@@ -250,7 +233,7 @@
 
 					if (index === 0) {
 						$controlsLeft.addClass('disabled');
-					} else if(index===slideCount-1) {
+					} else if(index + config.visibleSlides > slideCount) {
 						$controlsRight.addClass('disabled');
 					}
 				}
@@ -265,11 +248,12 @@
 						$paginationPoints.filter('.active').removeClass('active');
 					}
 				}
-				if (index < 0) {
-					index = slideCount-1;
-				} else if (index+(config.visibleSlides-1) > slideCount-1) {
+				if (last) {
 					index = 0;
+				} else if (start || index + config.visibleSlides > slideCount) {
+					index = slideCount-config.visibleSlides;
 				}
+
 				$current = $slides.eq(index);
 				if (config.visibleSlides===1) {
 					if (config.variableHeight) {
@@ -286,7 +270,10 @@
 					}
 				}
 				if (config.pagination) {
-					var nextPoint = config.visibleSlides === 1 ? index :Math.floor((index+config.visibleSlides >= slideCount ? slideCount : index)/config.visibleSlides);
+					var nextPoint = Math.floor(index/config.visibleSlides);
+					if (index===slideCount-config.visibleSlides) {
+						nextPoint = Math.floor((slideCount-1)/config.visibleSlides);
+					}
 					$paginationPoints.eq(nextPoint).addClass('active');
 				}
 				$current.addClass('active');
@@ -297,25 +284,7 @@
 					$current.fadeIn(config.transitionDuration);
 				} else {
 					nextOffset = offset[index];
-					if (fallback === '3d') {
-						$slideWrap.css({
-							'-webkit-transform': 'translate3d('+nextOffset +'px,0, 0)',
-							'-moz-transform': 'translate3d('+nextOffset +'px,0, 0)',
-							'transform': 'translate3d('+nextOffset +'px,0, 0)'
-						});
-					} else if (fallback === '2d') {
-						$slideWrap.css({
-							'-webkit-transform': 'translate('+nextOffset +'px,0)',
-							'-moz-transform': 'translate('+nextOffset +'px,0)',
-							'-ms-transform': 'translate('+nextOffset +'px,0)',
-							'-o-transform': 'translate('+nextOffset +'px,0)',
-							'transform': 'translate('+nextOffset +'px,0)'
-						});
-					} else {
-						$slideWrap.css({
-							'left': nextOffset+'px'
-						});
-					}
+					transition(nextOffset);
 				}
 				if (!initPos) {
 					initPos = true;
@@ -470,54 +439,126 @@
 
 
 			/**
+			* Function for event-handling
+			*/
+			function eventHanlers() {
+				/**
+				* Event handler for click on pagination points
+				*/
+				$paginationPoints.on('click', function(e) {
+					e.stopPropagation();
+					var index = $(this).index() * config.visibleSlides;
+					moveTo(index);
+					return false;
+				});
+
+
+				/**
+				* Event handler for click on left-nav
+				*/
+				$controlsLeft.on('click', function(e) {
+					e.stopPropagation();
+					prev();
+					return false;
+				});
+
+
+				/**
+				* Event handler for click on right-nav
+				*/
+				$controlsRight.on('click', function(e) {
+					e.stopPropagation();
+					next();
+					return false;
+				});
+			}
+
+
+			/**
 			* Initialize slider
 			*/
 			function init() {
+				/**
+			    * Styles
+			    */
+				$wrapper.css({
+					'position': 'relative',
+					'overflow': 'hidden',
+					'transition': 'all '+config.transitionDuration+'ms ease-out'
+				});
+
+				$slideWrap.css({
+					'height': '100%',
+					'width': '100%'
+				});
+
+				$slides.css({
+					'position': 'absolute'
+				});
+
+				if (config.fading) {
+					$slideWrap.css({
+						'width': '100%'
+					});
+					$slides.not(0).fadeOut();
+				} else {
+					$slideWrap.css({
+						'transition': 'all '+config.transitionDuration+'ms '+config.easing,
+						'left': '0',
+						'cursor': 'move'
+					});
+
+					if (fallback==='3d') {
+						$slideWrap.css({
+							'-webkit-backface-visibility': 'hidden',
+							'-moz-backface-visibility': 'hidden',
+							'-ms-backface-visibility': 'hidden',
+							'backface-visibility': 'hidden',
+							'-webkit-perspective': '1000',
+							'-moz-perspective': '1000',
+							'-ms-perspective': '1000',
+							'perspective': '1000'
+						});
+					}
+				}
 				initControls();
 				initPagination();
+				eventHanlers();
 				calcWidth();
-				moveTo(0);
+				if ($current !== undefined) {
+					var n = $current.index();
+					moveTo(0);
+					moveTo(n);
+				} else {
+					moveTo(0);
+				}
 
 				if (config.autoplay) {
 					play();
 				}
+				$wrapper.load(function() {
+					calcWidth();
+				});
 			}
 			init();
-			$wrapper.load(function() {
-				calcWidth();
-			});
-
 
 			/**
-			* Event handler for click on pagination points
+			* Function for reseting values
+			* @param newConfig (optional): for changing config
 			*/
-			$paginationPoints.on('click', function(e) {
-				e.stopPropagation();
-				var index = $(this).index();
-				index = index+(config.visibleSlides-1) >= slideCount-1 ? slideCount-config.visibleSlides :config.visibleSlides*index;
-				moveTo(index);
-				return false;
-			});
+			function reset(newConfig) {
+				if (newConfig !== undefined) {
+					for (var newProp in newConfig) {
+						if ( config.hasOwnProperty(newProp) ) {
+							config[newProp] = newConfig[newProp];
+						}
+					}
+				}
+				$controlsWrapper.remove();
+				$pagination.remove();
+				init();
+			}
 
-
-			/**
-			* Event handler for click on left-nav
-			*/
-			$controlsLeft.on('click', function(e) {
-				e.stopPropagation();
-				prev();
-				return false;
-			});
-
-
-			/**
-			* Event handler for click on right-nav
-			*/
-			$controlsRight.on('click', function(e) {
-				e.stopPropagation();
-				next();
-				return false;
-			});
 
 
 			/**
@@ -547,14 +588,15 @@
 				* Event handler for mouse-off-click
 				*/
 				'mouseup': function(e) {
+					mouseDown = false;
 					if (!mouseMove) {
 						return;
 					}
-					mouseDown = false;
 					mouseMove = false;
-					if (mouseStart > mouseX+20) {
+					var limit = 10;
+					if (mouseStart > mouseX+limit) {
 						next();
-					} else if (mouseStart < mouseX-20) {
+					} else if (mouseStart < mouseX+limit) {
 						prev();
 					}
 				},
@@ -622,6 +664,7 @@
 			/**
 			* Declare all sub-options
 			*/
+			$.fn.jcider.reset = reset;
 			$.fn.jcider.moveTo = moveTo;
 			$.fn.jcider.moveRight = next;
 			$.fn.jcider.moveLeft = prev;
