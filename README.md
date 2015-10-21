@@ -19,10 +19,13 @@ Feel free to send in [pull requests](http://github.com/Pratinav/jCider/pulls) to
 ####Issues
 
 
-The [issues page](http://github.com/Pratinav/jCider/issues) is **ONLY** for bugs or problems with the plugin or discussions for adding new features.
+Feel free to report any issues/problems with the plugin at [issues page](http://github.com/Pratinav/jCider/issues).
 
 
-If you have a problem to operate the plugin or set it up, the issues page is not the place for it, mail me at [pratinavbagla@gmail.com](mailto:pratinavbagla@gmail.com). **I will try to get to you as fast as possible but may not be able to get to you always.**
+You may send me a mail describing your issue- [pratinavbagla@gmail.com](mailto:pratinavbagla@gmail.com).
+
+
+**I will try to get to you as fast as possible but may not be able to get to you always.**
 
 
 ##Installation
