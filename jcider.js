@@ -1,5 +1,5 @@
 /*!
- * jCider v3.0.5 (http://pratinav.tk/jCider)
+ * jCider v3.0.6 (http://pratinav.tk/jCider)
  * (c) 2015 Pratinav Bagla (http://pratinav.tk)
  * Released under the MIT License (https://github.com/Pratinav/jCider/blob/master/LICENSE.txt)
  **/
@@ -139,6 +139,7 @@
 			* Calculate width and offset of all slides
 			*/
 			function calcWidth() {
+				if (config.fading) return;
 				var width = 0;
 				offset = [];
 				for (var x = 0; x < slideCount; x++) {
@@ -146,7 +147,6 @@
 					$slides.eq(x).css('left', width);
 					width+= $slides.eq(x).outerWidth(true);
 				}
-				return width;
 			}
 
 
@@ -493,7 +493,8 @@
 				});
 
 				$slides.css({
-					'position': 'absolute'
+					'position': 'absolute',
+					'left': '0'
 				});
 
 				if (config.fading) {
