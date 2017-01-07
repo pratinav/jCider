@@ -1,8 +1,3 @@
-# [jCider](https://pratinav.xyz/jCider/)
-
-An extensive and responsive jQuery carousel plugin that will slide your world.
-
-
 ## Installation
 
 Link `jcider.css`, [`jQuery`](https://jquery.com) and `jcider.min.js` in your `html` file, using the CDN or otherwise.
