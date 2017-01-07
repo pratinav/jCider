@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>jCider - an extensive and responsive jQuery carousel plugin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="https://fontastic.s3.amazonaws.com/CoBsvmhLG8dQosPCdCFvBM/icons.css">
+    <link rel="stylesheet" href="css/cayman.css">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">jCider</h1>
+      <h2 class="project-tagline">An extensive and responsive jQuery carousel plugin</h2>
+      <a href="https://github.com/pratinav/jCider" class="btn">View on GitHub</a>
+      <a href="https://github.com/pratinav/jCider/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/pratinav/jCider/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <div class="slider">
+        <ul>
+          <li>1</li>
+          <li>2</li>
+          <li>3</li>
+        </ul>
+      </div>
+      <h2 id="installation">Installation</h2>
+
+<p>Link <code class="highlighter-rouge">jcider.css</code>, <a href="https://jquery.com"><code class="highlighter-rouge">jQuery</code></a> and <code class="highlighter-rouge">jcider.min.js</code> in your <code class="highlighter-rouge">html</code> file, using the CDN or otherwise.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.jcider/latest/jcider.css"/&gt;
+&lt;script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.jcider/latest/jcider.min.js"&gt;&lt;/script&gt;
+</code></pre>
+</div>
+
+<h3 id="package-managers">Package Managers</h3>
+
+<p><code class="highlighter-rouge">bower install --save jcider</code></p>
+
+<p><code class="highlighter-rouge">npm install --save jcider</code></p>
+
+<h2 id="usage">Usage</h2>
+
+<h3 id="html">HTML</h3>
+
+<p>The carousel uses a 3 layer structure in the HTML document.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;div class="slider"&gt;
+	&lt;ul&gt;
+		&lt;li&gt;First Slide&lt;/li&gt;
+		&lt;li&gt;Second Slide&lt;/li&gt;
+		&lt;li&gt;Third Slide&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/div&gt;
+</code></pre>
+</div>
+
+<p>All your content for each slide should go inside the innermost elements, as illustrated above.</p>
+
+<p><em>For the rest of the docs we will refer to the outermost element as the <strong>wrapper</strong>, the middle element as the <strong>slider</strong> and the innermost elements as the <strong>slides</strong>.</em></p>
+
+<h3 id="css">CSS</h3>
+
+<p>The styles in the <code class="highlighter-rouge">jcider.css</code> file are the default styles that come with the plugin. You can customize the appearence and positioning as per your convinience in the <code class="highlighter-rouge">jcider.css</code> file. Please refer to the file for information on the selectors.</p>
+
+<h3 id="js">JS</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$(document).ready(function(){
+	// Make sure to call jcider on the wrapper (outermost) element
+	$('yourWrapperElementHere').jcider();
+});
+</code></pre>
+</div>
+
+<h3 id="settings">Settings</h3>
+
+<p>You can pass in multiple options as arguments for the <code class="highlighter-rouge">.jcider()</code> function.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$('yourWrapperElementHere').jcider({
+	looping: true, // For looping
+	visibleSlides: 1, // Visible no. of slides
+	variableWidth: false, // For variable width
+	variableHeight: true, // For variable height
+	fading: false, // For fading/sliding effect
+	easing: 'cubic-bezier(.694, .0482, .335, 1)', // For easing
+	transitionDuration: 400, // Duration of slide transition
+	autoplay: false, // Duh...
+	slideDuration: 3000, // Duration between each slide change in autoplay
+	controls: true, // For visibility of nav-arrows
+	controlsWrapper: 'div.jcider-nav', // Element for nav wrapper
+	controlsLeft: ['span.jcider-nav-left', ''], // Element for nav-left 
+	controlsRight: ['span.jcider-nav-right', ''], // Element for nav-right
+	pagination: true, // For visibility of pagination
+	paginationWrapper: 'div.jcider-pagination', // Element for pagination wrapper
+	paginationPoint: 'div.jcider-pagination-point' // Element for pagination points
+});
+</code></pre>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Setting Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>looping</td>
+      <td>boolean</td>
+      <td>Selects if looping is there or not.</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>visibleSlides</td>
+      <td>integer</td>
+      <td>Selects the number of slides visble at a time.</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>variableWidth</td>
+      <td>boolean</td>
+      <td>Selects if the wrapper should resize with the slide width or not.</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>variableHeight</td>
+      <td>boolean</td>
+      <td>Selects if the wrapper should resize with the slide height or not.</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>fading</td>
+      <td>boolean</td>
+      <td>Selects the type of transition. true is fading. <code class="highlighter-rouge">false</code> is sliding.</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>easing</td>
+      <td>string</td>
+      <td>Selects the type of easing to be used for CSS animations.</td>
+      <td>‘cubic-bezier(.694, .0482, .335, 1)’</td>
+    </tr>
+    <tr>
+      <td>transitionDuration</td>
+      <td>integer</td>
+      <td>The duration taken to transition from one slide to another, in milliseconds.</td>
+      <td>400</td>
+    </tr>
+    <tr>
+      <td>autoplay</td>
+      <td>boolean</td>
+      <td>Chooses whether automatic transition between slides is on or off. <code class="highlighter-rouge">true</code> is on.</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>slideDuration</td>
+      <td>integer</td>
+      <td>The duration between change of slides, in milliseconds. Only applicable if autoplay is on.</td>
+      <td>3000</td>
+    </tr>
+    <tr>
+      <td>controls</td>
+      <td>boolean</td>
+      <td>Chooses whether the navigation controls are visible or not. <code class="highlighter-rouge">true</code> is visible.</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>controlsWrapper</td>
+      <td>string</td>
+      <td>Selector for the nav-wrapper. Element followed by an optional id or multiple classes. Multiple classes must be separated by periods.</td>
+      <td>‘div.jcider-nav’</td>
+    </tr>
+    <tr>
+      <td>controlsLeft</td>
+      <td>array &gt; string * 2</td>
+      <td>Selector for left button for nav. Array containing two strings. The first string is the Element followed by an optional id or multiple classes. Multiple classes must be separated by periods. The second string is optional content.</td>
+      <td>[‘span.jcider-nav-left’, ‘’]</td>
+    </tr>
+    <tr>
+      <td>controlsRight</td>
+      <td>array &gt; string * 2</td>
+      <td>Selector for right button for nav. Array containing two strings. The first string is the Element followed by an optional id or multiple classes. Multiple classes must be separated by periods.</td>
+      <td>[‘span.jcider-nav-right’, ‘’]</td>
+    </tr>
+    <tr>
+      <td>pagination</td>
+      <td>boolean</td>
+      <td>Chooses whether the pagination is visible or not. <code class="highlighter-rouge">true</code> is visible.</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>paginationWrapper</td>
+      <td>string</td>
+      <td>Selector for pagination-wrapper. Element followed by an optional id or multiple classes. Multiple classes must be separated by periods.</td>
+      <td>‘div.jcider-pagination’</td>
+    </tr>
+    <tr>
+      <td>paginationPoints</td>
+      <td>string</td>
+      <td>Selector for pagination-points. Element followed by an optional id or multiple classes. Multiple classes must be separated by periods.</td>
+      <td>‘span.jcider-pagination-point’</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="using-multiple-carousels-in-one-page">Using Multiple carousels in one page</h3>
+
+<p>You can use multiple carousels in one page with ease. There may be two or more sliders with the same class.</p>
+
+<p>For example, your <code class="highlighter-rouge">html</code> would be-</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;div class="slider"&gt;
+	&lt;ul&gt;
+		&lt;li&gt;First Slide.&lt;/li&gt;
+		&lt;li&gt;Second Slide.&lt;/li&gt;
+		&lt;li&gt;Third Slide.&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;div class="slider"&gt;
+	&lt;ul&gt;
+		&lt;li&gt;First slide.&lt;/li&gt;
+		&lt;li&gt;Second slide.&lt;/li&gt;
+		&lt;li&gt;Third slide.&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;div class="another-slider"&gt;
+	&lt;ul&gt;
+		&lt;li&gt;First Slide.&lt;/li&gt;
+		&lt;li&gt;Second Slide.&lt;/li&gt;
+		&lt;li&gt;Third Slide.&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;div class="another-slider"&gt;
+	&lt;ul&gt;
+		&lt;li&gt;First Slide.&lt;/li&gt;
+		&lt;li&gt;Second Slide.&lt;/li&gt;
+		&lt;li&gt;Third Slide.&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/div&gt;
+</code></pre>
+</div>
+
+<p>Your <code class="highlighter-rouge">JS</code>would be-</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$('.slider').jcider();
+$('.another-slider').jcider();
+</code></pre>
+</div>
+
+<h2 id="functions">Functions</h2>
+
+<h3 id="jcidermoveleft"><code class="highlighter-rouge">jcider.moveLeft()</code></h3>
+
+<p>Transition towards the left.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$(document).ready(function() {
+	$('# main').jcider({
+		//Some options
+	});
+
+	$('button#left').click(function() {
+		$('# main').jcider.moveLeft();
+	});
+});
+</code></pre>
+</div>
+
+<h3 id="jcidermoveright"><code class="highlighter-rouge">jcider.moveRight()</code></h3>
+
+<p>Transition towards the right.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$(document).ready(function() {
+	$('# main').jcider({
+		//Some options
+	});
+
+	$('button# right').click(function() {
+		$('# main').jcider.moveRight();
+	});
+});
+</code></pre>
+</div>
+
+<h3 id="jcidermovetoindex"><code class="highlighter-rouge">jcider.moveTo(index)</code></h3>
+
+<p>Transition to slide at <code class="highlighter-rouge">index</code> (starting from 0).</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$(document).ready(function() {
+	$('# main').jcider({
+		//Some options
+	});
+
+	$('button# home').click(function() {
+		$('# main').jcider.moveTo(0);
+	});
+});
+</code></pre>
+</div>
+
+<h3 id="jciderplay"><code class="highlighter-rouge">jcider.play()</code></h3>
+
+<p>Enable autoplay.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$(document).ready(function() {
+	$('# main').jcider({
+		//Some options
+	});
+
+	$('button# play').click(function() {
+		$('# main').jcider.play();
+	});
+});
+</code></pre>
+</div>
+
+<h3 id="jciderpause"><code class="highlighter-rouge">jcider.pause()</code></h3>
+
+<p>Disable autoplay.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$(document).ready(function() {
+	$('# main').jcider({
+		//Some options
+	});
+
+	$('button# pause').click(function() {
+		$('# main').jcider.pause();
+	});
+});
+</code></pre>
+</div>
+
+<h3 id="jcidertoggleplay"><code class="highlighter-rouge">jcider.togglePlay()</code></h3>
+
+<p>Toggle autoplay.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$(document).ready(function() {
+	$('# main').jcider({
+		//Some options
+	});
+
+	$('button# toggle').click(function() {
+		$('# main').jcider.togglePlay();
+	});
+});
+</code></pre>
+</div>
+
+<h3 id="jciderhidecontrols"><code class="highlighter-rouge">jcider.hideControls()</code></h3>
+
+<p>Hide controls.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$(document).ready(function() {
+	$('# main').jcider({
+		//Some options
+	});
+
+	$('button# hide').click(function() {
+		$('# main').jcider.hideControls();
+	});
+});
+</code></pre>
+</div>
+
+<h3 id="jcidershowcontrols"><code class="highlighter-rouge">jcider.showControls()</code></h3>
+
+<p>Show controls.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$(document).ready(function() {
+	$('# main').jcider({
+		//Some options
+	});
+
+	$('button# show').click(function() {
+		$('# main').jcider.showControls();
+	});
+});
+</code></pre>
+</div>
+
+<h3 id="jcidertogglecontrols"><code class="highlighter-rouge">jcider.toggleControls()</code></h3>
+
+<p>Toggle controls.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$(document).ready(function() {
+	$('# main').jcider({
+		//Some options
+	});
+
+	$('button# show').click(function() {
+		$('# main').jcider.showControls();
+	});
+});
+</code></pre>
+</div>
+
+<h3 id="jciderhidepagination"><code class="highlighter-rouge">jcider.hidePagination()</code></h3>
+
+<p>Hide pagination.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$(document).ready(function() {
+	$('# main').jcider({
+		//Some options
+	});
+
+	$('button# hide').click(function() {
+		$('# main').jcider.hidePagination();
+	});
+});
+</code></pre>
+</div>
+
+<h3 id="jcidershowpagination"><code class="highlighter-rouge">jcider.showPagination()</code></h3>
+
+<p>Show pagination.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$(document).ready(function() {
+	$('# main').jcider({
+		//Some options
+	});
+
+	$('button# show').click(function() {
+		$('# main').jcider.showPagination();
+	});
+});
+</code></pre>
+</div>
+
+<h3 id="jcidertogglepagination"><code class="highlighter-rouge">jcider.togglePagination()</code></h3>
+
+<p>Toggle pagination.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$(document).ready(function() {
+	$('# main').jcider({
+		//Some options
+	});
+
+	$('button# show').click(function() {
+		$('# main').jcider.togglePagination();
+	});
+});
+</code></pre>
+</div>
+
+<p>This content is released under <a href="http://github.com/Pratinav/jCider/blob/master/LICENSE.txt">The MIT License</a>.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/pratinav/jCider">jCider</a> is maintained by <a href="https://github.com/pratinav">pratinav</a>.</span>
+      </footer>
+    </section>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.jcider/latest/jcider.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        $('.slider').jcider();
+      });
+    </script>
+  </body>
+</html>

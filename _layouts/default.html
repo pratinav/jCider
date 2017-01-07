@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>jCider - an extensive and responsive jQuery carousel plugin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="https://fontastic.s3.amazonaws.com/CoBsvmhLG8dQosPCdCFvBM/icons.css">
+    <link rel="stylesheet" href="css/cayman.css">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">jCider</h1>
+      <h2 class="project-tagline">An extensive and responsive jQuery carousel plugin</h2>
+      <a href="https://github.com/pratinav/jCider" class="btn">View on GitHub</a>
+      <a href="https://github.com/pratinav/jCider/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/pratinav/jCider/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <div class="slider">
+        <ul>
+          <li>1</li>
+          <li>2</li>
+          <li>3</li>
+        </ul>
+      </div>
+      {{ content }}
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/pratinav/jCider">jCider</a> is maintained by <a href="https://github.com/pratinav">pratinav</a>.</span>
+      </footer>
+    </section>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.jcider/latest/jcider.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        $('.slider').jcider();
+      });
+    </script>
+  </body>
+</html>
