@@ -9,9 +9,9 @@ Link `jcider.css`, [`jQuery`](https://jquery.com) and `jcider.min.js` in your `h
 
 
 ```
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.jcider/latest/jcider.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jcider@latest/jcider.css"/>
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.jcider/latest/jcider.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jcider@latest/jcider.min.js"></script>
 ```
 
 
