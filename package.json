@@ -7,6 +7,7 @@
     "jcider.min.js",
     "jcider.css"
   ],
+  "jsdelivr": "jcider.min.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Pratinav/jCider.git"
