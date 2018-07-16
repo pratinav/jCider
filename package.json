@@ -22,11 +22,11 @@
   "dependencies": {
     "jquery": "*"
   },
-  "author": "Pratinav Bagla <pratinavbagla@gmail.com> (http://pratinav.tk)",
+  "author": "Pratinav Bagla <pratinavbagla@gmail.com> (https://pratinav.github.io)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Pratinav/jCider/issues",
     "email": "pratinavbagla@gmail.com"
   },
-  "homepage": "http://pratinav.tk/jCider/"
+  "homepage": "https://pratinav.github.io/jCider/"
 }
