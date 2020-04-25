@@ -9,7 +9,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Pratinav/jCider.git"
+    "url": "git+https://github.com/pratinav/jCider.git"
   },
   "keywords": [
     "jquery-plugin",
@@ -22,11 +22,11 @@
   "dependencies": {
     "jquery": "*"
   },
-  "author": "Pratinav Bagla <pratinavbagla@gmail.com> (https://pratinav.github.io)",
+  "author": "Pratinav Bagla <pb@baglas.net>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Pratinav/jCider/issues",
-    "email": "pratinavbagla@gmail.com"
+    "url": "https://github.com/pratinav/jCider/issues",
+    "email": "pb@baglas.net"
   },
   "homepage": "https://pratinav.github.io/jCider/"
 }

@@ -1,4 +1,4 @@
-# [jCider](https://pratinav.xyz/jCider/)
+# [jCider](https://pratinav.github.io/jCider/)
 
 An extensive and responsive jQuery carousel plugin that will slide your world.
 
