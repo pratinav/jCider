@@ -1,17 +1,19 @@
 # [jCider](https://pratinav.github.io/jCider/)
 
+[![](https://data.jsdelivr.com/v1/package/npm/jcider/badge)](https://www.jsdelivr.com/package/npm/jcider)
+
 An extensive and responsive jQuery carousel plugin that will slide your world.
 
+**This plugin was written as a fun personal project when I was a kid. It has not
+been in development since 2015.**
 
 ## Installation
 
-Link `jcider.css`, [`jQuery`](https://jquery.com) and `jcider.min.js` in your `html` file, using the CDN or otherwise.
-
+Link [jQuery](https://jquery.com), `jcider.css`, and `jcider.min.js` in your `html` file, using the CDN or otherwise.
 
 ```
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.jcider/latest/jcider.css"/>
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.jcider/latest/jcider.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jcider@3.0.7/jcider.css"/>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jcider@3.0.7/jcider.min.js"></script>
 ```
 
 
@@ -357,5 +359,11 @@ $(document).ready(function() {
 });
 ```
 
+## Dependencies
 
-This content is released under [The MIT License](http://github.com/Pratinav/jCider/blob/master/LICENSE.txt).
+jQuery 1.x
+
+## License
+
+Released under [The MIT License](http://github.com/Pratinav/jCider/blob/master/LICENSE.txt).
+

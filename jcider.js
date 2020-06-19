@@ -1,6 +1,6 @@
 /*!
- * jCider v3.0.7 (https://pratinav.github.io/jCider)
- * (c) 2015 Pratinav Bagla <pb@baglas.net>
+ * jCider v3.0.8 (https://pratinav.github.io/jCider/)
+ * (c) 2015 Pratinav Bagla (https://www.pratinavbagla.com/)
  * Released under the MIT License (https://github.com/pratinav/jCider/blob/master/LICENSE.txt)
  **/
 

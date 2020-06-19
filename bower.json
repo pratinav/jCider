@@ -1,10 +1,10 @@
 {
   "name": "jCider",
   "main": ["jcider.min.js", "jcider.css"],
-  "version": "3.0.7",
+  "version": "3.0.8",
   "homepage": "https://pratinav.github.io/jCider/",
   "authors": [
-    "Pratinav Bagla <pb@baglas.net>"
+    "Pratinav Bagla (https://www.pratinavbagla.com/)"
   ],
   "description": "An extensive and responsive jQuery plugin for creating carousels or sliders.",
   "keywords": [
